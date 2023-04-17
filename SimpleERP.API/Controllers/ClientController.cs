@@ -40,6 +40,7 @@ namespace SimpleERP.API.Controllers
         public IActionResult Post(Client client)
         {
             _context.Clients.Add(client);
+            _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
         }
@@ -56,6 +57,9 @@ namespace SimpleERP.API.Controllers
 
             client.Update(input.Name);
 
+            _context.Clients.Update(client);
+            _context.SaveChanges();
+
             return NoContent();
         }
 
@@ -70,6 +74,9 @@ namespace SimpleERP.API.Controllers
             }
 
             client.Delete();
+
+            _context.Clients.Update(client);
+            _context.SaveChanges();
 
             return NoContent();
         }

@@ -1,9 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using SimpleERP.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<ClientDbContext>(); // Simulando banco de dados em memória
+var connectionString = builder.Configuration.GetConnectionString("DataApiCs");
+builder.Services.AddDbContext<ClientDbContext>(options => options.UseSqlServer(connectionString));
+
+/* Banco de Dados em Memória
+ * builder.Services.AddDbContext<ClientDbContext>(options => options.UseInMemoryDatabase("SimpleErpDB")); 
+ */
+
 builder.Services.AddSingleton<ProductDbContext>();
 
 builder.Services.AddControllers();
