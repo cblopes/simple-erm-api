@@ -1,6 +1,11 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using SimpleERP.API.Controllers;
 using SimpleERP.API.Data;
+using SimpleERP.API.Models;
 using SimpleERP.API.Profiles;
+using SimpleERP.API.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +19,14 @@ builder.Services.AddDbContext<ClientDbContext>(options => options.UseSqlServer(c
 
 builder.Services.AddSingleton<ProductDbContext>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(ClientProfile));
+builder.Services.AddTransient<IValidator<ClientInputModel>, AddClientValidator>();
+
 
 var app = builder.Build();
 
