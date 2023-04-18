@@ -27,8 +27,6 @@ namespace SimpleERP.API.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnType("varchar(100)");
-
-
             });
         }
     }

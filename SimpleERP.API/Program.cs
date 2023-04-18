@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleERP.API.Data;
+using SimpleERP.API.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(ClientProfile));
 
 var app = builder.Build();
 

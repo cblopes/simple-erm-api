@@ -2,8 +2,12 @@
 {
     public class Client
     {
-        public Client()
+        public Client() { }
+        public Client(string cpfCnpj, string name)
         {
+            Id = Guid.NewGuid();
+            CpfCnpj = cpfCnpj;
+            Name = name;
             IsActive = true;
         }
 

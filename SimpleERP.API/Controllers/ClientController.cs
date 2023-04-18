@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
+using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
@@ -9,9 +11,11 @@ namespace SimpleERP.API.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly ClientDbContext _context;
-        public ClientController(ClientDbContext context)
+        public ClientController(IMapper mapper, ClientDbContext context)
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -20,7 +24,9 @@ namespace SimpleERP.API.Controllers
         {
             var clients = _context.Clients.Where(c => c.IsActive).ToList();
 
-            return Ok(clients);
+            var clientViewModel = _mapper.ProjectTo<ClientViewModel>(clients.AsQueryable()).ToList();
+
+            return Ok(clientViewModel);
         }
 
         [HttpGet("{id}")]
@@ -33,29 +39,35 @@ namespace SimpleERP.API.Controllers
                 return NotFound();
             }
 
-            return Ok(client);
+            var clientViewModel = _mapper.Map<ClientViewModel>(client);
+
+            return Ok(clientViewModel);
         }
 
         [HttpPost]
-        public IActionResult Post(Client client)
+        public IActionResult Post(ClientInputModel model)
         {
+            var client = _mapper.Map<Client>(model);
+
             _context.Clients.Add(client);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
+            return CreatedAtAction(nameof(GetById), new { id = client.Id }, model);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, Client input)
+        public IActionResult Put(Guid id, ClientInputModel model)
         {
-            var client = _context.Clients.SingleOrDefault(c => c.Id == id);
+            var client = _mapper.Map<Client>(model);
+
+            client = _context.Clients.SingleOrDefault(c => c.Id == id);
 
             if (client == null)
             {
                 return NotFound();
             }
 
-            client.Update(input.Name);
+            client.Update(model.Name);
 
             _context.Clients.Update(client);
             _context.SaveChanges();
