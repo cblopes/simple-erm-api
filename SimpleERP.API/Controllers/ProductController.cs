@@ -8,8 +8,8 @@ namespace SimpleERP.API.Controllers
     [ApiController]
     public class ProductController : Controller
     {
-        private readonly ProductDbContext _context;
-        public ProductController(ProductDbContext context)
+        private readonly ErpDbContext _context;
+        public ProductController(ErpDbContext context)
         {
             _context = context;
         }
@@ -39,6 +39,7 @@ namespace SimpleERP.API.Controllers
         public IActionResult Post(Product product)
         {
             _context.Products.Add(product);
+            _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
@@ -55,6 +56,9 @@ namespace SimpleERP.API.Controllers
 
             product.Update(input.Description, input.QuantityInStock, input.Price);
 
+            _context.Update(product);
+            _context.SaveChanges();
+
             return NoContent();
         }
 
@@ -69,6 +73,7 @@ namespace SimpleERP.API.Controllers
             }
 
             product.Delete();
+            _context.SaveChanges();
 
             return NoContent();
         }

@@ -12,8 +12,8 @@ namespace SimpleERP.API.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ClientDbContext _context;
-        public ClientController(IMapper mapper, ClientDbContext context)
+        private readonly ErpDbContext _context;
+        public ClientController(IMapper mapper, ErpDbContext context)
         {
             _mapper = mapper;
             _context = context;

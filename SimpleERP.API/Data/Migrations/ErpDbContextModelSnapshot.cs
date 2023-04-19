@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleERP.API.Data;
 
@@ -11,12 +10,10 @@ using SimpleERP.API.Data;
 
 namespace SimpleERP.API.Data.Migrations
 {
-    [DbContext(typeof(ClientDbContext))]
-    [Migration("20230417014738_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(ErpDbContext))]
+    partial class ErpDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,6 +44,36 @@ namespace SimpleERP.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("QuantityInStock")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
                 });
 #pragma warning restore 612, 618
         }

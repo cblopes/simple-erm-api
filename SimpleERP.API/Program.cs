@@ -11,13 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DataApiCs");
-builder.Services.AddDbContext<ClientDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ErpDbContext>(options => options.UseSqlServer(connectionString));
 
 /* Banco de Dados em Memória
  * builder.Services.AddDbContext<ClientDbContext>(options => options.UseInMemoryDatabase("SimpleErpDB")); 
  */
 
-builder.Services.AddSingleton<ProductDbContext>();
+//builder.Services.AddSingleton<ProductDbContext>();
 
 builder.Services.AddControllers().AddFluentValidation();
 

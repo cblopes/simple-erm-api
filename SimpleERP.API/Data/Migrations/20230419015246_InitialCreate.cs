@@ -24,6 +24,22 @@ namespace SimpleERP.API.Data.Migrations
                 {
                     table.PrimaryKey("PK_Clients", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    QuantityInStock = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -31,6 +47,9 @@ namespace SimpleERP.API.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }
