@@ -8,7 +8,9 @@ namespace SimpleERP.API.Profiles
     {
         public ClientProfile()
         { 
-            CreateMap<ClientInputModel, Client>();
+            CreateMap<CreateClientModel, Client>();
+
+            CreateMap<UpdateClientModel, Client>();
             
             CreateMap<Client, ClientViewModel>();
         }

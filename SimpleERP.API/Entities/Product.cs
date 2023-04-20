@@ -4,7 +4,7 @@
     {
         public Product()
         {
-            Description = "";
+            Id = Guid.NewGuid();
             QuantityInStock = 0;
             IsDeleted = false;
         }

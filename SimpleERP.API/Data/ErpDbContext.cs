@@ -44,9 +44,11 @@ namespace SimpleERP.API.Data
                     .HasMaxLength(100)
                     .HasColumnType("varchar(100)");
 
-                entity.Property(product => product.QuantityInStock);
+                entity.Property(product => product.QuantityInStock)
+                    .HasColumnType("integer");
 
-                entity.Property(product => product.Price);
+                entity.Property(product => product.Price)
+                    .HasColumnType("decimal(18,2)");
             });
         }
     }

@@ -25,7 +25,7 @@ builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(ClientProfile));
-builder.Services.AddTransient<IValidator<ClientInputModel>, AddClientValidator>();
+builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
 
 
 var app = builder.Build();

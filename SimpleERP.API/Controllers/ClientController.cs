@@ -45,7 +45,7 @@ namespace SimpleERP.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(ClientInputModel model)
+        public IActionResult Post(CreateClientModel model)
         {
             var client = _mapper.Map<Client>(model);
 
@@ -56,7 +56,7 @@ namespace SimpleERP.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, ClientInputModel model)
+        public IActionResult Put(Guid id, UpdateClientModel model)
         {
             var client = _mapper.Map<Client>(model);
 

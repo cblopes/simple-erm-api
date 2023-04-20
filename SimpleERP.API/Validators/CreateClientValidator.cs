@@ -3,9 +3,9 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Validators
 {
-    public class AddClientValidator : AbstractValidator<ClientInputModel>
+    public class CreateClientValidator : AbstractValidator<CreateClientModel>
     {
-        public AddClientValidator() 
+        public CreateClientValidator() 
         {
             RuleFor(m => m.Name)
                 .NotEmpty()

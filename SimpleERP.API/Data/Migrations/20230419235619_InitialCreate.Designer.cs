@@ -12,7 +12,7 @@ using SimpleERP.API.Data;
 namespace SimpleERP.API.Data.Migrations
 {
     [DbContext(typeof(ErpDbContext))]
-    [Migration("20230419015246_InitialCreate")]
+    [Migration("20230419235619_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -68,11 +68,11 @@ namespace SimpleERP.API.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuantityInStock")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

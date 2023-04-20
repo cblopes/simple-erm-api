@@ -32,8 +32,8 @@ namespace SimpleERP.API.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Code = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
                     Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    QuantityInStock = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    QuantityInStock = table.Column<int>(type: "integer", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
