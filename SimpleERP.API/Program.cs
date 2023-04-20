@@ -24,8 +24,14 @@ builder.Services.AddControllers().AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Mapper's
 builder.Services.AddAutoMapper(typeof(ClientProfile));
+builder.Services.AddAutoMapper(typeof(ProductProfile));
+
+// Validator's
 builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
+builder.Services.AddTransient<IValidator<UpdateClientModel>, UpdateClientValidator>();
 
 
 var app = builder.Build();
