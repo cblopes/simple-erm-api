@@ -6,8 +6,8 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
-    [Route("api-simple-erp/product")]
     [ApiController]
+    [Route("api/v1/product")]
     public class ProductController : Controller
     {
         private readonly IMapper _mapper;

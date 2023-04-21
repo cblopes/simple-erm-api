@@ -7,7 +7,7 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
-    [Route("api-simple-erp/client")]
+    [Route("api/v1/client")]
     [ApiController]
     public class ClientController : ControllerBase
     {
