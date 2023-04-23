@@ -5,10 +5,7 @@ namespace SimpleERP.API.Data
 {
     public class ErpDbContext : DbContext
     {
-        public ErpDbContext(DbContextOptions<ErpDbContext> options) : base(options)
-        {
-
-        }
+        public ErpDbContext(DbContextOptions<ErpDbContext> options) : base(options) { }
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<Product> Products { get; set; }

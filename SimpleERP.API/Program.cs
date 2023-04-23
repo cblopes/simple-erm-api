@@ -1,8 +1,10 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SimpleERP.API.Controllers;
 using SimpleERP.API.Data;
+using SimpleERP.API.Extensions;
 using SimpleERP.API.Models;
 using SimpleERP.API.Profiles;
 using SimpleERP.API.Validators;
@@ -12,6 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DataApiCs");
 builder.Services.AddDbContext<ErpDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<IdentityDataContext>()
+    .AddErrorDescriber<IdentityMessagesToPortuguese>()
+    .AddDefaultTokenProviders();
 
 /* Banco de Dados em Memória
  * builder.Services.AddDbContext<ClientDbContext>(options => options.UseInMemoryDatabase("SimpleErpDB")); 
@@ -44,6 +53,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
