@@ -1,20 +1,29 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SimpleERP.API.Extensions;
 using SimpleERP.API.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SimpleERP.API.Controllers
 {
     [ApiController]
-    [Route("api/account")]
+    [Route("api/v1/account")]
     public class AuthController : ControllerBase
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppSettings _appSettings;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AuthController(SignInManager<IdentityUser> signInManager, 
+                              UserManager<IdentityUser> userManager,
+                              IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("register")]
@@ -34,7 +43,7 @@ namespace SimpleERP.API.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return Ok(registerUser);
+                return Ok(GenerateJwt());
             }
 
             return BadRequest(result.Errors);
@@ -49,7 +58,7 @@ namespace SimpleERP.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(loginUser);
+                return Ok(GenerateJwt());
             }
             if (result.IsLockedOut)
             {
@@ -57,6 +66,23 @@ namespace SimpleERP.API.Controllers
             }
 
             return BadRequest(new { error = "Usuário ou senha incorretos." });
+        }
+
+        private string GenerateJwt()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _appSettings.Issuer,
+                Audience = _appSettings.ValidIn,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.HoursExpiration),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            });
+
+            var encodedToken = tokenHandler.WriteToken(token);
+
+            return encodedToken;
         }
     }
 }

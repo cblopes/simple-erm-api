@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
@@ -6,6 +7,7 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/product")]
     public class ProductController : Controller

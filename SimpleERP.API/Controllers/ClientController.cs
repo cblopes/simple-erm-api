@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Data;
@@ -7,8 +8,9 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
-    [Route("api/v1/client")]
+    [Authorize]
     [ApiController]
+    [Route("api/v1/client")]
     public class ClientController : ControllerBase
     {
         private readonly IMapper _mapper;
