@@ -68,7 +68,7 @@ namespace SimpleERP.API.Controllers
             return BadRequest(new { error = "Usuário ou senha incorretos." });
         }
 
-        private string GenerateJwt()
+        private object GenerateJwt()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -81,8 +81,11 @@ namespace SimpleERP.API.Controllers
             });
 
             var encodedToken = tokenHandler.WriteToken(token);
+            var tokenViewModel = new { 
+                accessToken = encodedToken, 
+                expiresIn = _appSettings.HoursExpiration * 600 };
 
-            return encodedToken;
+            return tokenViewModel;
         }
     }
 }
