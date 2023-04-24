@@ -10,7 +10,7 @@ namespace SimpleERP.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/v1/client")]
+    [Route("api/v1/clients")]
     public class ClientController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -21,7 +21,13 @@ namespace SimpleERP.API.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Obter todos os clientes
+        /// </summary>
+        /// <returns>Coleção de clientes</returns>
+        /// <response code="200">Sucesso</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetAll()
         {
             var clients = _context.Clients.Where(c => c.IsActive).ToList();
@@ -31,7 +37,16 @@ namespace SimpleERP.API.Controllers
             return Ok(clientViewModel);
         }
 
+        /// <summary>
+        /// Obter um cliente por Id
+        /// </summary>
+        /// <param name="id">Identificador do cliente</param>
+        /// <returns>Informações de um cliente</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(Guid id)
         { 
             var client = _context.Clients.SingleOrDefault(c => c.Id == id);
@@ -46,9 +61,18 @@ namespace SimpleERP.API.Controllers
             return Ok(clientViewModel);
         }
 
+        /// <summary>
+        /// Cadastrar um cliente
+        /// </summary>
+        /// <param name="model">Dados do cliente</param>
+        /// <returns>Cliente recém-cadastrado</returns>
+        /// <response code="201">Sucesso</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult Post(CreateClientModel model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var client = _mapper.Map<Client>(model);
 
             _context.Clients.Add(client);
@@ -57,9 +81,21 @@ namespace SimpleERP.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = client.Id }, model);
         }
 
+        /// <summary>
+        /// Atualizar os dados de um cliente
+        /// </summary>
+        /// <param name="id">Identificador do cliente</param>
+        /// <param name="model">Dados do evento</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="204">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(Guid id, UpdateClientModel model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var client = _mapper.Map<Client>(model);
 
             client = _context.Clients.SingleOrDefault(c => c.Id == id);
@@ -77,7 +113,16 @@ namespace SimpleERP.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deleta um cliente
+        /// </summary>
+        /// <param name="id">Identificador do cliente</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="204">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(Guid id)
         {
             var client = _context.Clients.SingleOrDefault(c => c.Id == id);

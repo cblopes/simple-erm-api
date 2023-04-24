@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace SimpleERP.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/account")]
+    [Route("api/v1/accounts")]
     public class AuthController : ControllerBase
     {
         private readonly SignInManager<IdentityUser> _signInManager;

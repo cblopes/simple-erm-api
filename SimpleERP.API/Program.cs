@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SimpleERP.API.Controllers;
 using SimpleERP.API.Data;
 using SimpleERP.API.Extensions;
@@ -61,7 +62,54 @@ builder.Services.AddControllers().AddFluentValidation();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "SimpleErp.API",
+        Version = "v1",
+        Contact = new OpenApiContact
+        {
+            Name = "Christhian Lopes",
+            Email = "christhian.lopes@proton.me",
+            Url = new Uri("https://www.linkedin.com/in/christhiancbl/")
+        }
+    });
+
+    var xmlFile = "SimpleErp.API.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+
+    var security = new Dictionary<string, IEnumerable<string>>
+    {
+        { "Bearer ", new string[] { } }
+    };
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Insira o token JWT desta maneira: Bearer {seuToken}",
+        Name = "Authorization",
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 // Mapper's
 builder.Services.AddAutoMapper(typeof(ClientProfile));

@@ -9,7 +9,7 @@ namespace SimpleERP.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/v1/product")]
+    [Route("api/v1/products")]
     public class ProductController : Controller
     {
         private readonly IMapper _mapper;
@@ -48,6 +48,8 @@ namespace SimpleERP.API.Controllers
         [HttpPost]
         public IActionResult Post(CreateProductModel model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var product = _mapper.Map<Product>(model);
 
             _context.Products.Add(product);
@@ -59,6 +61,8 @@ namespace SimpleERP.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, UpdateProductModel model)
         {
+            if (!ModelState.IsValid) return BadRequest(model);
+
             var product = _mapper.Map<Product>(model);
 
             product = _context.Products.SingleOrDefault(p => p.Id == id);
