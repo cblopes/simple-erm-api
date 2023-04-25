@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using SimpleERP.API.Models;
 
-namespace SimpleERP.API.Validators
+namespace SimpleERP.API.Models.Validators
 {
     public class CreateClientValidator : AbstractValidator<CreateClientModel>
     {
-        public CreateClientValidator() 
+        public CreateClientValidator()
         {
             RuleFor(m => m.Name)
                 .NotEmpty()

@@ -2,11 +2,11 @@
 using SimpleERP.API.Entities;
 using SimpleERP.API.Models;
 
-namespace SimpleERP.API.Profiles
+namespace SimpleERP.API.Entities.Profiles
 {
     public class ProductProfile : Profile
     {
-        public ProductProfile() 
+        public ProductProfile()
         {
             CreateMap<CreateProductModel, Product>();
 

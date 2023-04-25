@@ -7,10 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SimpleERP.API.Controllers;
 using SimpleERP.API.Data;
+using SimpleERP.API.Entities.Profiles;
 using SimpleERP.API.Extensions;
 using SimpleERP.API.Models;
-using SimpleERP.API.Profiles;
-using SimpleERP.API.Validators;
+using SimpleERP.API.Models.Validators;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
