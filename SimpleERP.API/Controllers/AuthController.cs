@@ -26,7 +26,16 @@ namespace SimpleERP.API.Controllers
             _appSettings = appSettings.Value;
         }
 
+        /// <summary>
+        /// Cadastrar um usuário
+        /// </summary>
+        /// <param name="registerUser">Dados do usuário</param>
+        /// <returns>Token JWT</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="400">Má Requisição</response>
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Register(RegisterUserViewModel registerUser)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -49,7 +58,16 @@ namespace SimpleERP.API.Controllers
             return BadRequest(result.Errors);
         }
 
+        /// <summary>
+        /// Entrar como um usuário
+        /// </summary>
+        /// <param name="loginUser">Dados do usuário</param>
+        /// <returns>Token JWT</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="400">Má Requisição</response>
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Login(LoginUserViewModel loginUser)
         {
             if (!ModelState.IsValid) return BadRequest(loginUser);

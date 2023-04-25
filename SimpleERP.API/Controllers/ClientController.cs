@@ -67,8 +67,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="model">Dados do cliente</param>
         /// <returns>Cliente recém-cadastrado</returns>
         /// <response code="201">Sucesso</response>
+        /// <response code="400">Má requisição</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(CreateClientModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);
@@ -88,9 +90,11 @@ namespace SimpleERP.API.Controllers
         /// <param name="model">Dados do evento</param>
         /// <returns>Sem retorno</returns>
         /// <response code="204">Sucesso</response>
+        /// <response code="400">Má requisição</response>
         /// <response code="404">Não encontrado</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(Guid id, UpdateClientModel model)
         {
@@ -114,7 +118,7 @@ namespace SimpleERP.API.Controllers
         }
 
         /// <summary>
-        /// Deleta um cliente
+        /// Deletar um cliente
         /// </summary>
         /// <param name="id">Identificador do cliente</param>
         /// <returns>Sem retorno</returns>
