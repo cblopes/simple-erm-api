@@ -5,20 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
 using SimpleERP.API.Models;
+using SimpleERP.API.Services;
 
 namespace SimpleERP.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/v1/clients")]
     public class ClientController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ErpDbContext _context;
-        public ClientController(IMapper mapper, ErpDbContext context)
+        private readonly IClientServices _clientServices;
+        public ClientController(IMapper mapper, ErpDbContext context, IClientServices clientServices)
         {
             _mapper = mapper;
             _context = context;
+            _clientServices = clientServices;
         }
 
         /// <summary>
@@ -28,9 +31,9 @@ namespace SimpleERP.API.Controllers
         /// <response code="200">Sucesso</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var clients = _context.Clients.Where(c => c.IsActive).ToList();
+            var clients = await _clientServices.GetAllClientsAsync();
 
             var clientViewModel = _mapper.ProjectTo<ClientViewModel>(clients.AsQueryable()).ToList();
 
@@ -47,9 +50,9 @@ namespace SimpleERP.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         { 
-            var client = _context.Clients.SingleOrDefault(c => c.Id == id);
+            var client = await _clientServices.GetClientByIdAsync(id);
 
             if (client == null)
             {
@@ -71,14 +74,13 @@ namespace SimpleERP.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(CreateClientModel model)
+        public async Task<IActionResult> Post(CreateClientModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);
 
             var client = _mapper.Map<Client>(model);
 
-            _context.Clients.Add(client);
-            _context.SaveChanges();
+            await _clientServices.CreateClientAsync(client);
 
             return CreatedAtAction(nameof(GetById), new { id = client.Id }, model);
         }
@@ -96,13 +98,13 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(Guid id, UpdateClientModel model)
+        public async Task<IActionResult> Put(Guid id, UpdateClientModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);
 
             var client = _mapper.Map<Client>(model);
 
-            client = _context.Clients.SingleOrDefault(c => c.Id == id);
+            client = await _clientServices.GetClientByIdAsync(id);
 
             if (client == null)
             {
@@ -111,8 +113,7 @@ namespace SimpleERP.API.Controllers
 
             client.Update(model.Name);
 
-            _context.Clients.Update(client);
-            _context.SaveChanges();
+            await _clientServices.UpdateClientAsync(client);
 
             return NoContent();
         }
@@ -127,9 +128,9 @@ namespace SimpleERP.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var client = _context.Clients.SingleOrDefault(c => c.Id == id);
+            var client = await _clientServices.GetClientByIdAsync(id);
 
             if (client == null)
             {
@@ -138,8 +139,7 @@ namespace SimpleERP.API.Controllers
 
             client.Delete();
 
-            _context.Clients.Update(client);
-            _context.SaveChanges();
+            await _clientServices.UpdateClientAsync(client);
 
             return NoContent();
         }
