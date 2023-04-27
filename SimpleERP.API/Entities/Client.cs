@@ -21,6 +21,11 @@
             Name = name;
         }
 
+        public void Active()
+        {
+            IsActive = true;
+        }
+
         public void Delete()
         {
             IsActive = false;

@@ -1,6 +1,5 @@
 ﻿using SimpleERP.API.Entities;
 using SimpleERP.API.Interfaces;
-using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Services
 {
@@ -25,22 +24,43 @@ namespace SimpleERP.API.Services
 
         public async Task CreateClientAsync(Client client)
         {
-            await _clientRepository.CreateAsync(client);
+            var clientExist = await _clientRepository.GetByCpfCnpjAsync(client.CpfCnpj);
+
+            if (clientExist != null && clientExist.IsActive) throw new ApplicationException("Cliente já cadastrado.");
+
+            if (clientExist != null && !clientExist.IsActive)
+            {
+                clientExist.Update(client.Name);
+                clientExist.Active();
+
+                await _clientRepository.UpdateAsync(clientExist);
+            }
+            else
+            {
+                await _clientRepository.CreateAsync(client);
+            }
         }
 
-        public async Task UpdateClientAsync(Client client)
+        public async Task UpdateClientAsync(Guid id, Client client)
         {
-            await _clientRepository.UpdateAsync(client);
+            var clientExist = await _clientRepository.GetByIdAsync(id);
+
+            if (clientExist == null || !clientExist.IsActive) throw new ApplicationException("Cliente não encontrado.");
+
+            clientExist.Update(client.Name);
+
+            await _clientRepository.UpdateAsync(clientExist);
         }
 
         public async Task RemoveClientAsync(Guid id)
         {
             var client = await _clientRepository.GetByIdAsync(id);
 
-            if (client != null)
-            {
-                await _clientRepository.RemoveAsync(client);
-            }
+            if (client == null || !client.IsActive) throw new ApplicationException("Cliente não encontrado.");
+
+            client.Delete();
+
+            await _clientRepository.RemoveAsync(client);
         }
     }
 }

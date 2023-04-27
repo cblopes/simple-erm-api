@@ -4,23 +4,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
+using SimpleERP.API.Interfaces;
 using SimpleERP.API.Models;
-using SimpleERP.API.Services;
 
 namespace SimpleERP.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/v1/clients")]
     public class ClientController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ErpDbContext _context;
         private readonly IClientServices _clientServices;
-        public ClientController(IMapper mapper, ErpDbContext context, IClientServices clientServices)
+        public ClientController(IMapper mapper, IClientServices clientServices)
         {
             _mapper = mapper;
-            _context = context;
             _clientServices = clientServices;
         }
 
@@ -78,11 +76,20 @@ namespace SimpleERP.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(model);
 
-            var client = _mapper.Map<Client>(model);
+            try
+            {
+                var client = _mapper.Map<Client>(model);
 
-            await _clientServices.CreateClientAsync(client);
+                await _clientServices.CreateClientAsync(client);
 
-            return CreatedAtAction(nameof(GetById), new { id = client.Id }, model);
+                var clientViewModel = _mapper.Map<ClientViewModel>(client);
+
+                return CreatedAtAction(nameof(GetById), new { id = clientViewModel.Id }, clientViewModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         /// <summary>
@@ -100,22 +107,20 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(Guid id, UpdateClientModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(model);
+            if (!ModelState.IsValid) return BadRequest(model);            
 
-            var client = _mapper.Map<Client>(model);
+            try
+            {
+                var client = _mapper.Map<Client>(model);
 
-            client = await _clientServices.GetClientByIdAsync(id);
+                await _clientServices.UpdateClientAsync(id, client);
 
-            if (client == null)
+                return NoContent();
+            }
+            catch (Exception)
             {
                 return NotFound();
-            }
-
-            client.Update(model.Name);
-
-            await _clientServices.UpdateClientAsync(client);
-
-            return NoContent();
+            }            
         }
 
         /// <summary>
@@ -130,18 +135,16 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var client = await _clientServices.GetClientByIdAsync(id);
+            try
+            {
+                await _clientServices.RemoveClientAsync(id);
 
-            if (client == null)
+                return NoContent();
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            client.Delete();
-
-            await _clientServices.UpdateClientAsync(client);
-
-            return NoContent();
         }
     }
 }

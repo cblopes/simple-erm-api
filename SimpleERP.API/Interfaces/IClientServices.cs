@@ -1,13 +1,13 @@
 ﻿using SimpleERP.API.Entities;
 
-namespace SimpleERP.API.Services
+namespace SimpleERP.API.Interfaces
 {
     public interface IClientServices
     {
         Task<IEnumerable<Client>> GetAllClientsAsync();
         Task<Client> GetClientByIdAsync(Guid id);
         Task CreateClientAsync(Client client);
-        Task UpdateClientAsync(Client client);
+        Task UpdateClientAsync(Guid id, Client client);
         Task RemoveClientAsync(Guid id);
     }
 }

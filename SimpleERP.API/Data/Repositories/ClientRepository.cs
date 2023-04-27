@@ -23,6 +23,11 @@ namespace SimpleERP.API.Data.Repositories
             return await _context.Clients.FindAsync(id);
         }
 
+        public async Task<Client> GetByCpfCnpjAsync(string document)
+        {
+            return await _context.Clients.SingleOrDefaultAsync(c => c.CpfCnpj == document);
+        }
+
         public async Task CreateAsync(Client client)
         {
             await _context.Clients.AddAsync(client);
