@@ -49,17 +49,19 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
-        { 
-            var client = await _clientServices.GetClientByIdAsync(id);
+        {
+            try
+            {
+                var client = await _clientServices.GetClientByIdAsync(id);
 
-            if (client == null)
+                var clientViewModel = _mapper.Map<ClientViewModel>(client);
+
+                return Ok(clientViewModel);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            var clientViewModel = _mapper.Map<ClientViewModel>(client);
-
-            return Ok(clientViewModel);
         }
 
         /// <summary>

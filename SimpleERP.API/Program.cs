@@ -5,15 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SimpleERP.API.Controllers;
+using SimpleERP.API.Configurations;
 using SimpleERP.API.Data;
-using SimpleERP.API.Data.Repositories;
 using SimpleERP.API.Entities.Profiles;
 using SimpleERP.API.Extensions;
-using SimpleERP.API.Interfaces;
 using SimpleERP.API.Models;
 using SimpleERP.API.Models.Validators;
-using SimpleERP.API.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -122,10 +119,7 @@ builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
 builder.Services.AddTransient<IValidator<UpdateClientModel>, UpdateClientValidator>();
 
-// Services => services.AddScoped<IFornecedorService, FornecedorService>()
-builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddScoped<IClientServices, ClientServices>();
-
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 

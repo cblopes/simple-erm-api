@@ -19,7 +19,11 @@ namespace SimpleERP.API.Services
 
         public async Task<Client> GetClientByIdAsync(Guid id)
         {
-            return await _clientRepository.GetByIdAsync(id);
+            var client = await _clientRepository.GetByIdAsync(id);
+            
+            if (client == null || !client.IsActive) throw new ApplicationException("Cliente não encontrado.");
+
+            return client;
         }
 
         public async Task CreateClientAsync(Client client)
@@ -54,13 +58,13 @@ namespace SimpleERP.API.Services
 
         public async Task RemoveClientAsync(Guid id)
         {
-            var client = await _clientRepository.GetByIdAsync(id);
+            var clientExist = await _clientRepository.GetByIdAsync(id);
 
-            if (client == null || !client.IsActive) throw new ApplicationException("Cliente não encontrado.");
+            if (clientExist == null || !clientExist.IsActive) throw new ApplicationException("Cliente não encontrado.");
 
-            client.Delete();
+            clientExist.Delete();
 
-            await _clientRepository.RemoveAsync(client);
+            await _clientRepository.RemoveAsync(clientExist);
         }
     }
 }
