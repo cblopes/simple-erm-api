@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
 using SimpleERP.API.Interfaces;
 using SimpleERP.API.Models;
@@ -58,9 +56,9 @@ namespace SimpleERP.API.Controllers
 
                 return Ok(clientViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound( new { Error = ex.Message } );
             }
         }
 
@@ -90,7 +88,7 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest( new { error = ex.Message } );
             }
         }
 
@@ -119,9 +117,9 @@ namespace SimpleERP.API.Controllers
 
                 return NoContent();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound( new { error = ex.Message } );
             }            
         }
 
@@ -143,9 +141,9 @@ namespace SimpleERP.API.Controllers
 
                 return NoContent();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound( new { error = ex.Message } );
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleERP.API.Data;
 using SimpleERP.API.Entities;
+using SimpleERP.API.Interfaces;
 using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
@@ -13,11 +13,11 @@ namespace SimpleERP.API.Controllers
     public class ProductController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ErpDbContext _context;
-        public ProductController(ErpDbContext context, IMapper mapper)
+        private readonly IProductServices _productService;
+        public ProductController(IProductServices productService, IMapper mapper)
         {
-            _context = context;
             _mapper = mapper;
+            _productService = productService;
         }
 
         /// <summary>
@@ -27,9 +27,9 @@ namespace SimpleERP.API.Controllers
         /// <response code="200">Sucesso</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var product = _context.Products.Where(p => !p.IsDeleted).ToList();
+            var product = await _productService.GetAllProductsAsync();
 
             var productViewModel = _mapper.ProjectTo<ProductViewModel>(product.AsQueryable()).ToList();
 
@@ -46,18 +46,20 @@ namespace SimpleERP.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var product = _context.Products.SingleOrDefault(p => p.Id == id);
-
-            if (product == null)
+            try
             {
-                return NotFound();
+                var product = await _productService.GetProductByIdAsync(id);
+
+                var productViewModel = _mapper.Map<ProductViewModel>(product);
+
+                return Ok(productViewModel);
             }
-
-            var productViewModel = _mapper.Map<ProductViewModel>(product);
-
-            return Ok(productViewModel);
+            catch (Exception ex)
+            {
+                return NotFound( new { Error = ex.Message } );
+            }
         }
 
         /// <summary>
@@ -70,16 +72,24 @@ namespace SimpleERP.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(CreateProductModel model)
+        public async Task<IActionResult> Post(CreateProductModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);
 
-            var product = _mapper.Map<Product>(model);
+            try
+            {
+                var product = _mapper.Map<Product>(model);
 
-            _context.Products.Add(product);
-            _context.SaveChanges();
+                await _productService.CreateProductAsync(product);
 
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, model);
+                var productViewModel = _mapper.Map<ProductViewModel>(product);
+
+                return CreatedAtAction(nameof(GetById), new { id = productViewModel.Id }, productViewModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest( new { Error = ex.Message } );
+            }
         }
 
         /// <summary>
@@ -95,25 +105,22 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(Guid id, UpdateProductModel model)
+        public async Task<IActionResult> Put(Guid id, UpdateProductModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);
 
-            var product = _mapper.Map<Product>(model);
-
-            product = _context.Products.SingleOrDefault(p => p.Id == id);
-
-            if (product == null)
+            try
             {
-                return NotFound();
+                var product = _mapper.Map<Product>(model);
+
+                await _productService.UpdateProductAsync(id, product);
+
+                return NoContent();
             }
-
-            product.Update(model.Description, model.QuantityInStock, model.Price);
-
-            _context.Update(product);
-            _context.SaveChanges();
-
-            return NoContent();
+            catch(Exception ex)
+            {
+                return NotFound( new { Error = ex.Message } );
+            }
         }
 
         /// <summary>
@@ -126,19 +133,19 @@ namespace SimpleERP.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var product = _context.Products.SingleOrDefault(c => c.Id == id);
-
-            if (product == null)
+            try
             {
-                return NotFound();
+                await _productService.RemoveProductAsync(id);
+
+                return NoContent();
             }
-
-            product.Delete();
-            _context.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return NotFound( new { Error = ex.Message } );
+            }
+            
         }
     }
 }

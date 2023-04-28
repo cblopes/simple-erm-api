@@ -8,7 +8,7 @@ namespace SimpleERP.API.Data.Repositories
     {
         private readonly ErpDbContext _context;
 
-        public ClientRepository(ErpDbContext context)
+        public ClientRepository( ErpDbContext context )
         {
             _context = context;
         }
