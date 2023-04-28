@@ -9,7 +9,7 @@ namespace SimpleERP.API.Entities
         public DateTime CreatedIn { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime UpdatedIn { get; set;}
-        public double Price { get; set; }
+        public double Value { get; set; }
         public List<OrderItem> Items { get; set; }
     }
 }
