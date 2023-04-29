@@ -12,8 +12,8 @@ using SimpleERP.API.Data;
 namespace SimpleERP.API.Data.Migrations
 {
     [DbContext(typeof(ErpDbContext))]
-    [Migration("20230429004852_teste")]
-    partial class teste
+    [Migration("20230429191732_CorrectionsTableOrder")]
+    partial class CorrectionsTableOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,19 +52,20 @@ namespace SimpleERP.API.Data.Migrations
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedIn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
+                    b.Property<char>("OrderStatus")
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<DateTime>("UpdatedIn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
@@ -76,16 +77,17 @@ namespace SimpleERP.API.Data.Migrations
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
@@ -94,7 +96,9 @@ namespace SimpleERP.API.Data.Migrations
                     b.Property<decimal>("UnitaryValue")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -134,7 +138,7 @@ namespace SimpleERP.API.Data.Migrations
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.HasOne("SimpleERP.API.Entities.Client", "Client")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -144,26 +148,34 @@ namespace SimpleERP.API.Data.Migrations
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
                 {
-                    b.HasOne("SimpleERP.API.Entities.Order", "Order")
+                    b.HasOne("SimpleERP.API.Entities.Order", null)
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleERP.API.Entities.Product", "Product")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
-
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Client", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

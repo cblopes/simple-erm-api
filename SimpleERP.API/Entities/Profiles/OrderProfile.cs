@@ -8,6 +8,9 @@ namespace SimpleERP.API.Entities.Profiles
         public OrderProfile() 
         {
             CreateMap<CreateOrderViewModel, Order>();
+
+            CreateMap<Order, OrderViewModel>()
+                .ForMember(ovm => ovm.OrderStatus, options => options.MapFrom(o => (char)o.OrderStatus));
         }
     }
 }

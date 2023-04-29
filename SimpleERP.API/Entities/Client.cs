@@ -2,19 +2,10 @@
 {
     public class Client
     {
-        public Client() { }
-        public Client(string cpfCnpj, string name)
-        {
-            Id = Guid.NewGuid();
-            CpfCnpj = cpfCnpj;
-            Name = name;
-            IsActive = true;
-        }
-
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string CpfCnpj { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public void Update(string name)
         {

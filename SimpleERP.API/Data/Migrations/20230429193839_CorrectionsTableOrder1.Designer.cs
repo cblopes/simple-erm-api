@@ -12,8 +12,8 @@ using SimpleERP.API.Data;
 namespace SimpleERP.API.Data.Migrations
 {
     [DbContext(typeof(ErpDbContext))]
-    [Migration("20230419235619_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230429193839_CorrectionsTableOrder1")]
+    partial class CorrectionsTableOrder1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,60 @@ namespace SimpleERP.API.Data.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedIn")
+                        .HasColumnType("datetime");
+
+                    b.Property<char>("OrderStatus")
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime>("UpdatedIn")
+                        .HasColumnType("datetime");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("UnitaryValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -77,6 +131,20 @@ namespace SimpleERP.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
+                {
+                    b.HasOne("SimpleERP.API.Entities.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

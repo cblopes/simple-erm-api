@@ -34,8 +34,6 @@ namespace SimpleERP.API.Services
 
             if (clientExist == null || !clientExist.IsActive) throw new Exception("Cliente não encontrado.");
 
-            order.Client = clientExist;
-
             await _orderRepository.CreateAsync(order);
         }
 

@@ -12,8 +12,8 @@ using SimpleERP.API.Data;
 namespace SimpleERP.API.Data.Migrations
 {
     [DbContext(typeof(ErpDbContext))]
-    [Migration("20230428020742_AddOrdersAndOrderItemsTables")]
-    partial class AddOrdersAndOrderItemsTables
+    [Migration("20230429191053_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,18 +52,16 @@ namespace SimpleERP.API.Data.Migrations
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedIn")
-                        .HasColumnType("Datetime");
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("OrderStatus")
-                        .IsRequired()
-                        .HasColumnType("char");
+                    b.Property<char>("OrderStatus")
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<DateTime>("UpdatedIn")
                         .HasColumnType("Datetime");
@@ -72,9 +70,6 @@ namespace SimpleERP.API.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId")
-                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -141,11 +136,13 @@ namespace SimpleERP.API.Data.Migrations
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
-                    b.HasOne("SimpleERP.API.Entities.Client", null)
-                        .WithOne()
-                        .HasForeignKey("SimpleERP.API.Entities.Order", "ClientId")
+                    b.HasOne("SimpleERP.API.Entities.Client", "Client")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
@@ -156,16 +153,28 @@ namespace SimpleERP.API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SimpleERP.API.Entities.Product", null)
-                        .WithMany()
+                    b.HasOne("SimpleERP.API.Entities.Product", "Product")
+                        .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Client", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

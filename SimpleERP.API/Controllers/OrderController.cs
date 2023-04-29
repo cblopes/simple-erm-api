@@ -26,7 +26,9 @@ namespace SimpleERP.API.Controllers
             {
                 var orders = await _orderServices.GetAllOrdersAsync();
 
-                return Ok(orders);
+                var orderViewModel = _mapper.ProjectTo<OrderViewModel>(orders.AsQueryable()).ToList();
+
+                return Ok(orderViewModel);
             }
             catch (Exception ex)
             {
@@ -41,7 +43,9 @@ namespace SimpleERP.API.Controllers
             {
                 var order = await _orderServices.GetOrderByIdAsync(id);
 
-                return Ok(order);
+                var orderViewModel = _mapper.Map<OrderViewModel>(order);
+
+                return Ok(orderViewModel);
             }
             catch (Exception ex)
             {
@@ -61,7 +65,39 @@ namespace SimpleERP.API.Controllers
 
                 await _orderServices.CreateOrderAsync(order);
 
-                return CreatedAtAction(nameof(GetOrderById), new { id = order.Id } , order);
+                var orderViewModel = _mapper.Map<OrderViewModel>(order);
+
+                return CreatedAtAction(nameof(GetOrderById), new { id = orderViewModel.Id } , orderViewModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch("{id}/Finish")]
+        public async Task<IActionResult> FinishOrder(Guid id)
+        {
+            try
+            {
+                await _orderServices.FinishOrderAsync(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch("{id}/Cancel")]
+        public async Task<IActionResult> CancelOrder(Guid id)
+        {
+            try
+            {
+                await _orderServices.CancelOrderAsync(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

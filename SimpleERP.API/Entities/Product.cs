@@ -2,19 +2,12 @@
 {
     public class Product
     {
-        public Product()
-        {
-            Id = Guid.NewGuid();
-            QuantityInStock = 0;
-            IsDeleted = false;
-        }
-
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Code { get; set; }
         public string Description { get; set; }
-        public int QuantityInStock { get; set; }
+        public int QuantityInStock { get; set; } = 0;
         public double Price { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public void Update(string description,int quantityInStock, double price)
         {
