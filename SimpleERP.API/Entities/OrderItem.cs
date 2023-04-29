@@ -8,5 +8,7 @@
         public int Quantity { get; set; }
         public double UnitaryValue { get; set; }
         public double Amount { get; set; }
+        public Order Order { get; set; }
+        public Product Product { get; set; }
     }
 }

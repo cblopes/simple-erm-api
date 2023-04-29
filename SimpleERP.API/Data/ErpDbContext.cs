@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleERP.API.Entities;
+using System.Reflection.Emit;
 
 namespace SimpleERP.API.Data
 {
@@ -53,10 +54,7 @@ namespace SimpleERP.API.Data
             builder.Entity<Order>(entity =>
             {
                 entity.HasKey(order => order.Id);
-
-                entity.HasOne<Client>()
-                    .WithOne();
-
+                /*
                 entity.Property(order => order.CreatedIn)
                     .IsRequired()
                     .HasColumnType("Datetime");
@@ -67,25 +65,19 @@ namespace SimpleERP.API.Data
 
                 entity.Property(order => order.UpdatedIn)
                     .IsRequired()
-                    .HasColumnType("Datetime");
+                    .HasColumnType("Datetime");*/
 
                 entity.Property(order => order.Value)
                     .HasColumnType("decimal(18,2)");
 
-                entity.HasMany(order => order.Items)
-                    .WithOne()
-                    .HasForeignKey(item => item.OrderId);
+                entity.HasOne(order => order.Client)
+                    .WithMany()
+                    .HasForeignKey(client => client.Id);
             });
 
             builder.Entity<OrderItem>(entity =>
             {
-                entity.HasKey(item => item.Id);
-
-                /*entity.HasOne<Order>()
-                    .WithMany();*/
-
-                entity.HasOne<Product>()
-                    .WithMany();
+                entity.HasKey(item => new { item.OrderId, item.ProductId });
 
                 entity.Property(item => item.Quantity)
                     .HasColumnType("integer");
@@ -96,6 +88,14 @@ namespace SimpleERP.API.Data
 
                 entity.Property(item => item.Amount)
                     .HasColumnType("decimal(18,2)");
+
+                entity.HasOne(item => item.Order)
+                    .WithMany(order => order.Items)
+                    .HasForeignKey(order => order.OrderId);
+
+                entity.HasOne(item => item.Product)
+                    .WithMany()
+                    .HasForeignKey(product => product.ProductId);
             });
         }
     }

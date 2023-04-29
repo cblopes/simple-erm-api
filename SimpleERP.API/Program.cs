@@ -114,6 +114,7 @@ builder.Services.AddSwaggerGen(c =>
 // Mapper's
 builder.Services.AddAutoMapper(typeof(ClientProfile));
 builder.Services.AddAutoMapper(typeof(ProductProfile));
+builder.Services.AddAutoMapper(typeof(OrderProfile));
 
 // Validator's
 builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();

@@ -14,6 +14,9 @@ namespace SimpleERP.API.Configurations
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductServices, ProductServices>();
 
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderServices, OrderServices>();
+
             return services;
         }
     }

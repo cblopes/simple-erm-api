@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleERP.API.Data;
 
@@ -11,9 +12,11 @@ using SimpleERP.API.Data;
 namespace SimpleERP.API.Data.Migrations
 {
     [DbContext(typeof(ErpDbContext))]
-    partial class ErpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230429004319_MoreCorrections")]
+    partial class MoreCorrections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,13 +58,14 @@ namespace SimpleERP.API.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedIn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("Datetime");
 
-                    b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("char");
 
                     b.Property<DateTime>("UpdatedIn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("Datetime");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
