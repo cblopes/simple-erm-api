@@ -1,15 +1,18 @@
 ﻿using SimpleERP.API.Entities;
+using SimpleERP.API.Entities.Enums;
 using SimpleERP.API.Interfaces;
 
 namespace SimpleERP.API.Services
 {
     public class ProductServices : IProductServices
     {
-        readonly IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public ProductServices(IProductRepository productRepository)
+        public ProductServices(IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _productRepository = productRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -21,50 +24,64 @@ namespace SimpleERP.API.Services
         {
             var product = await _productRepository.GetByIdAsync(id);
 
-            if (product == null || product.IsDeleted) throw new ApplicationException("Produto não encontrado.");
+            if (product == null || product.IsDeleted) throw new Exception("Produto não encontrado.");
 
             return product;
         }
 
-        public async Task CreateProductAsync(Product product)
+        public async Task CreateProductAsync(Product input)
         {
-            var productExist = await _productRepository.GetByCodeAsync(product.Code);
+            var product = await _productRepository.GetByCodeAsync(input.Code);
 
-            if (productExist != null && !productExist.IsDeleted) throw new ApplicationException("Produto já cadastrado.");
+            if (product != null && !product.IsDeleted) throw new Exception("Produto já cadastrado.");
 
-            if (productExist != null && productExist.IsDeleted)
+            if (product != null && product.IsDeleted)
             {
-                productExist.Update(product.Description, product.QuantityInStock, product.Price);
-                productExist.IsDeleted = false;
+                product.Update(input.Description, input.QuantityInStock, input.Price);
+                product.IsDeleted = false;
 
-                await _productRepository.UpdateAsync(productExist);
+                await _productRepository.UpdateAsync(product);
             }
             else
             {
-                await _productRepository.CreateAsync(product);
+                await _productRepository.CreateAsync(input);
             }
         }
 
-        public async Task UpdateProductAsync(Guid id, Product product)
+        public async Task UpdateProductAsync(Guid id, Product input)
         {
-            var productExist = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdAsync(id);
 
-            if (productExist == null || productExist.IsDeleted) throw new ApplicationException("Produto não encontrado.");
+            if (product == null || product.IsDeleted) throw new Exception("Produto não encontrado.");
 
-            productExist.Update(product.Description, product.QuantityInStock, product.Price);
+            product.Update(input.Description, input.QuantityInStock, input.Price);
 
-            await _productRepository.UpdateAsync(productExist);
+            await _productRepository.UpdateAsync(product);
         }
 
         public async Task RemoveProductAsync(Guid id)
         {
-            var productExist = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdAsync(id);
 
-            if (productExist == null || productExist.IsDeleted) throw new ApplicationException("Produto não encontrado.");
+            if (product == null || product.IsDeleted) throw new Exception("Produto não encontrado.");
 
-            productExist.Delete();
+            var orders = await _orderRepository.GetAllAsync();
 
-            await _productRepository.RemoveAsync(productExist);
+            foreach (var order in orders)
+            {
+                if (order.OrderStatus == OrderStatus.Canceled) continue;
+
+                foreach (var item in order.Items)
+                {
+                    if (item.ProductId == id) throw new Exception("O produto não pode ser removido pois está em pedidos em aberto ou finalizados.");
+                }
+            }
+
+            if (product.QuantityInStock > 0) throw new Exception("O produto não pode ser removido pois ainda há unidades em estoque.");
+
+            product.Delete();
+
+            await _productRepository.RemoveAsync(product);
         }
     }
 }

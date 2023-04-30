@@ -11,7 +11,8 @@ namespace SimpleERP.API.Services
         private readonly IClientRepository _clientRepository;
         private readonly IProductRepository _productRepository;
 
-        public OrderServices(IOrderRepository orderRepository, IClientRepository clientRepository, IOrderItemRepository orderItemRepository, IProductRepository productRepository)
+        public OrderServices(IOrderRepository orderRepository, IClientRepository clientRepository, 
+                             IOrderItemRepository orderItemRepository, IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
             _clientRepository = clientRepository;
@@ -71,13 +72,26 @@ namespace SimpleERP.API.Services
                 case OrderStatus.Canceled: throw new Exception("Pedido já foi cancelado.");
             }
 
+            foreach (var item in order.Items)
+            {
+                var product = await _productRepository.GetByIdAsync(item.ProductId);
+
+                product.QuantityInStock += item.Quantity;
+                await _productRepository.UpdateAsync(product);
+
+                item.Quantity = 0;
+                item.CalculateAmount();
+                await _orderItemRepository.UpdateAsync(item);
+            }
+
+            order.TotalValue();
             order.CancelOrder();
             order.UpdateTime();
 
             await _orderRepository.UpdateAsync(order);
         }
 
-        public async Task AddItemAsync(Guid orderId, OrderItem item)
+        public async Task AddItemAsync(Guid orderId, OrderItem input)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
 
@@ -86,25 +100,25 @@ namespace SimpleERP.API.Services
             switch (order.OrderStatus)
             {
                 case OrderStatus.Finished: throw new Exception("Pedido já foi finalizado. Inclusão não permitida.");
-                case OrderStatus.Canceled: throw new Exception("Pedido cancelado.");
+                case OrderStatus.Canceled: throw new Exception("Pedido já foi cancelado. Inclusão não permitida");
             }
 
-            var product = await _productRepository.GetByIdAsync(item.ProductId);
+            var product = await _productRepository.GetByIdAsync(input.ProductId);
 
             if (product == null || product.IsDeleted) throw new Exception("Produto não encontrado");
 
-            var itemExist = await _orderItemRepository.GetByOrderProductIdAsync(orderId, product.Id);
+            var item = await _orderItemRepository.GetByOrderProductIdAsync(orderId, product.Id);
 
-            if (itemExist != null) throw new Exception("O item já foi adicionado anteriormente. Tente alterá-lo.");
+            if (item != null) throw new Exception("O item já foi adicionado anteriormente. Tente alterá-lo.");
 
-            if (item.Quantity > product.QuantityInStock) throw new Exception("Quantidade informada é superior a quantidade em estoque.");
+            if (input.Quantity > product.QuantityInStock) throw new Exception("Quantidade informada é superior a quantidade em estoque.");
 
-            item.OrderId = orderId;
-            item.UnitaryValue = product.Price;
-            item.CalculateAmount();
-            await _orderItemRepository.CreateAsync(item);
+            input.OrderId = orderId;
+            input.UnitaryValue = product.Price;
+            input.CalculateAmount();
+            await _orderItemRepository.CreateAsync(input);
 
-            product.QuantityInStock -= item.Quantity;
+            product.QuantityInStock -= input.Quantity;
             await _productRepository.UpdateAsync(product);
 
             order.TotalValue();
@@ -112,7 +126,7 @@ namespace SimpleERP.API.Services
             await _orderRepository.UpdateAsync(order);
         }
 
-        public async Task AlterQuantityItemAsync(Guid orderId, Guid itemId, OrderItem item)
+        public async Task AlterQuantityItemAsync(Guid orderId, Guid itemId, OrderItem input)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);
 
@@ -121,42 +135,42 @@ namespace SimpleERP.API.Services
             switch (order.OrderStatus)
             {
                 case OrderStatus.Finished: throw new Exception("Pedido já foi finalizado. Alteração não permitida.");
-                case OrderStatus.Canceled: throw new Exception("Pedido cancelado.");
+                case OrderStatus.Canceled: throw new Exception("Pedido já foi cancelado. Alteração não permitida");
             }
 
-            var itemExist = await _orderItemRepository.GetByIdAsync(itemId);
+            var item = await _orderItemRepository.GetByIdAsync(itemId);
 
-            if (itemExist == null) throw new Exception("Item não encontrado no pedido informado.");
+            if (item == null) throw new Exception("Item não encontrado no pedido informado.");
 
-            int newQuantity = item.Quantity;
+            int newQuantity = input.Quantity;
 
-            if (newQuantity == itemExist.Quantity ) throw new Exception("Quantidade informada é igual a quantidade do item.");
+            if (newQuantity == item.Quantity ) throw new Exception("Quantidade informada é igual a quantidade do item.");
 
-            var product = await _productRepository.GetByIdAsync(itemExist.ProductId);
+            var product = await _productRepository.GetByIdAsync(item.ProductId);
 
             int difference;
 
-            if (newQuantity > itemExist.Quantity)
+            if (newQuantity > item.Quantity)
             {
-                difference = newQuantity - itemExist.Quantity;
+                difference = newQuantity - item.Quantity;
 
                 if (difference > product.QuantityInStock) throw new Exception("Quantidade informada é superior a quantidade em estoque.");
 
                 product.QuantityInStock -= difference;
-                itemExist.Quantity += difference;
+                item.Quantity += difference;
             }
             else
             {
-                difference = itemExist.Quantity - newQuantity;
+                difference = item.Quantity - newQuantity;
 
                 product.QuantityInStock += difference;
-                itemExist.Quantity -= difference;
+                item.Quantity -= difference;
             }
 
             await _productRepository.UpdateAsync(product);
 
-            itemExist.CalculateAmount();
-            await _orderItemRepository.UpdateAsync(itemExist);
+            item.CalculateAmount();
+            await _orderItemRepository.UpdateAsync(item);
 
             order.TotalValue();
             order.UpdateTime();
@@ -175,16 +189,16 @@ namespace SimpleERP.API.Services
                 case OrderStatus.Canceled: throw new Exception("Pedido já foi cancelado. Remoção não permitida.");
             }
 
-            var itemExist = await _orderItemRepository.GetByIdAsync(itemId);
+            var item = await _orderItemRepository.GetByIdAsync(itemId);
 
-            if (itemExist == null) throw new Exception("Item não encontrado no pedido informado.");
+            if (item == null) throw new Exception("Item não encontrado no pedido informado.");
 
-            var product = await _productRepository.GetByIdAsync(itemExist.ProductId);
+            var product = await _productRepository.GetByIdAsync(item.ProductId);
 
-            product.QuantityInStock += itemExist.Quantity;
+            product.QuantityInStock += item.Quantity;
             await _productRepository.UpdateAsync(product);
 
-            await _orderItemRepository.DeleteAsync(itemExist);
+            await _orderItemRepository.DeleteAsync(item);
 
             order.TotalValue();
             order.UpdateTime();

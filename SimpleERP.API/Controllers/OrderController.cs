@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleERP.API.Entities;
 using SimpleERP.API.Interfaces;
@@ -6,6 +7,7 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/orders")]
     public class OrderController : Controller
@@ -19,7 +21,13 @@ namespace SimpleERP.API.Controllers
             _orderServices = orderServices;
         }
 
+        /// <summary>
+        /// Obter todos os pedidos
+        /// </summary>
+        /// <returns>Coleção de pedidos</returns>
+        /// <response code="200">Sucesso</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllOrders()
         {
             try
@@ -36,7 +44,16 @@ namespace SimpleERP.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obter um pedidopor por Id
+        /// </summary>
+        /// <param name="id">Identificador do pedido</param>
+        /// <returns>Dados do pedido</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
             try
@@ -54,14 +71,21 @@ namespace SimpleERP.API.Controllers
             
         }
 
+        /// <summary>
+        /// Abrir um pedido
+        /// </summary>
+        /// <param name="input">Identificador do cliente</param>
+        /// <returns>Pedido criado</returns>
+        /// <reponse code="201">Sucesso</reponse>
+        /// <reponse code="400">Má requisição</reponse>
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(CreateOrderViewModel model)
+        public async Task<IActionResult> CreateOrder(CreateOrderViewModel input)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var order = _mapper.Map<Order>(model);
+                var order = _mapper.Map<Order>(input);
 
                 await _orderServices.CreateOrderAsync(order);
 
@@ -75,7 +99,16 @@ namespace SimpleERP.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Fechar/Finalizar um pedido
+        /// </summary>
+        /// <param name="id">Identificador do pedido</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpPatch("{id}/finish")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> FinishOrder(Guid id)
         {
             try
@@ -86,11 +119,20 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return NotFound(new { error = ex.Message });
             }
         }
 
+        /// <summary>
+        /// Cancelar um pedido
+        /// </summary>
+        /// <param name="id">Identificador do pedido</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpPatch("{id}/cancel")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CancelOrder(Guid id)
         {
             try
@@ -101,19 +143,19 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return NotFound(new { error = ex.Message });
             }
         }
 
         [HttpPost("{orderId}/items")]
-        public async Task<IActionResult> AddItem(Guid orderId, CreateOrderItemViewModel model)
+        public async Task<IActionResult> AddItem(Guid orderId, CreateOrderItemViewModel input)
         {
             try
             {
-                var item = _mapper.Map<OrderItem>(model);
+                var item = _mapper.Map<OrderItem>(input);
                 await _orderServices.AddItemAsync(orderId, item);
 
-                return NoContent();
+                return CreatedAtAction(nameof(GetOrderById), new { id = orderId} );
             }
             catch (Exception ex)
             {
@@ -122,11 +164,11 @@ namespace SimpleERP.API.Controllers
         }
 
         [HttpPatch("{orderId}/items/{itemId}")]
-        public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemViewModel model)
+        public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemViewModel input)
         {
             try
             {
-                var item = _mapper.Map<OrderItem>(model);
+                var item = _mapper.Map<OrderItem>(input);
                 await _orderServices.AlterQuantityItemAsync(orderId, itemId, item);
 
                 return NoContent();
@@ -148,7 +190,7 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return NotFound(new { error = ex.Message });
             }
         }
     }

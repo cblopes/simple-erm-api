@@ -1,4 +1,5 @@
 ﻿using SimpleERP.API.Entities;
+using SimpleERP.API.Entities.Enums;
 using SimpleERP.API.Interfaces;
 
 namespace SimpleERP.API.Services
@@ -6,10 +7,12 @@ namespace SimpleERP.API.Services
     public class ClientServices : IClientServices
     {
         private readonly IClientRepository _clientRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public ClientServices(IClientRepository clientRepository)
+        public ClientServices(IClientRepository clientRepository, IOrderRepository orderRepository)
         {
             _clientRepository = clientRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<IEnumerable<Client>> GetAllClientsAsync()
@@ -21,50 +24,59 @@ namespace SimpleERP.API.Services
         {
             var client = await _clientRepository.GetByIdAsync(id);
             
-            if (client == null || !client.IsActive) throw new ApplicationException("Cliente não encontrado.");
+            if (client == null || !client.IsActive) throw new Exception("Cliente não encontrado.");
 
             return client;
         }
 
-        public async Task CreateClientAsync(Client client)
+        public async Task CreateClientAsync(Client input)
         {
-            var clientExist = await _clientRepository.GetByCpfCnpjAsync(client.CpfCnpj);
+            var client = await _clientRepository.GetByCpfCnpjAsync(input.CpfCnpj);
 
-            if (clientExist != null && clientExist.IsActive) throw new ApplicationException("Cliente já cadastrado.");
+            if (client != null && client.IsActive) throw new Exception("Cliente já cadastrado.");
 
-            if (clientExist != null && !clientExist.IsActive)
+            if (client != null && !client.IsActive)
             {
-                clientExist.Update(client.Name);
-                clientExist.Active();
+                client.Update(input.Name);
+                client.Active();
 
-                await _clientRepository.UpdateAsync(clientExist);
+                await _clientRepository.UpdateAsync(client);
             }
             else
             {
-                await _clientRepository.CreateAsync(client);
+                await _clientRepository.CreateAsync(input);
             }
         }
 
-        public async Task UpdateClientAsync(Guid id, Client client)
+        public async Task UpdateClientAsync(Guid id, Client input)
         {
-            var clientExist = await _clientRepository.GetByIdAsync(id);
+            var client = await _clientRepository.GetByIdAsync(id);
 
-            if (clientExist == null || !clientExist.IsActive) throw new ApplicationException("Cliente não encontrado.");
+            if (client == null || !client.IsActive) throw new Exception("Cliente não encontrado.");
 
-            clientExist.Update(client.Name);
+            client.Update(input.Name);
 
-            await _clientRepository.UpdateAsync(clientExist);
+            await _clientRepository.UpdateAsync(client);
         }
 
         public async Task RemoveClientAsync(Guid id)
         {
-            var clientExist = await _clientRepository.GetByIdAsync(id);
+            var client = await _clientRepository.GetByIdAsync(id);
 
-            if (clientExist == null || !clientExist.IsActive) throw new ApplicationException("Cliente não encontrado.");
+            if (client == null || !client.IsActive) throw new Exception("Cliente não encontrado.");
 
-            clientExist.Delete();
+            var orders = await _orderRepository.GetAllAsync();
 
-            await _clientRepository.RemoveAsync(clientExist);
+            foreach (var order in orders)
+            {
+                if (order.OrderStatus == OrderStatus.Canceled) continue;
+
+                if (order.ClientId == client.Id) throw new Exception("Cliente possui um pedido em aberto ou finalizado. Não pode ser excluído.");
+            }
+
+            client.Delete();
+
+            await _clientRepository.RemoveAsync(client);
         }
     }
 }
