@@ -8,5 +8,15 @@
         public int Quantity { get; set; } = 0;
         public double UnitaryValue { get; set; }
         public double Amount { get; set; }
+
+        public void Update(int quatity)
+        {
+            Quantity = quatity;
+        }
+
+        public void CalculateAmount()
+        {
+            Amount = Quantity * UnitaryValue;
+        }
     }
 }

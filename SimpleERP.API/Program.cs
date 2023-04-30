@@ -52,12 +52,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-/* Banco de Dados em Memória
- * builder.Services.AddDbContext<ClientDbContext>(options => options.UseInMemoryDatabase("SimpleErpDB")); 
- */
-
-//builder.Services.AddSingleton<ProductDbContext>();
-
 builder.Services.AddControllers().AddFluentValidation();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -115,6 +109,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(ClientProfile));
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddAutoMapper(typeof(OrderProfile));
+builder.Services.AddAutoMapper(typeof(OrderItemProfile));
 
 // Validator's
 builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();

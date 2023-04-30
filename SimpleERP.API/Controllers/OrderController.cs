@@ -75,14 +75,14 @@ namespace SimpleERP.API.Controllers
             }
         }
 
-        [HttpPatch("{id}/Finish")]
+        [HttpPatch("{id}/finish")]
         public async Task<IActionResult> FinishOrder(Guid id)
         {
             try
             {
                 await _orderServices.FinishOrderAsync(id);
 
-                return Ok();
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -90,14 +90,61 @@ namespace SimpleERP.API.Controllers
             }
         }
 
-        [HttpPatch("{id}/Cancel")]
+        [HttpPatch("{id}/cancel")]
         public async Task<IActionResult> CancelOrder(Guid id)
         {
             try
             {
                 await _orderServices.CancelOrderAsync(id);
 
-                return Ok();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("{orderId}/items")]
+        public async Task<IActionResult> AddItem(Guid orderId, CreateOrderItemViewModel model)
+        {
+            try
+            {
+                var item = _mapper.Map<OrderItem>(model);
+                await _orderServices.AddItemAsync(orderId, item);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPatch("{orderId}/items/{itemId}")]
+        public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemViewModel model)
+        {
+            try
+            {
+                var item = _mapper.Map<OrderItem>(model);
+                await _orderServices.AlterQuantityItemAsync(orderId, itemId, item);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpDelete("{orderId}/items/{itemId}")]
+        public async Task<IActionResult> DeleteItem(Guid orderId, Guid itemId)
+        {
+            try
+            {
+                await _orderServices.DeleteItemAsync(orderId, itemId);
+
+                return NoContent();
             }
             catch (Exception ex)
             {
