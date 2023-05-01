@@ -1,6 +1,6 @@
 ﻿namespace SimpleERP.API.Models
 {
-    public class UpdateClientModel
+    public class AlterClientModel
     {
         public string Name { get; set; }
     }

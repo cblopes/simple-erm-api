@@ -3,7 +3,7 @@ using SimpleERP.API.Models;
 
 namespace SimpleERP.API.Models.Validators
 {
-    public class UpdateClientValidator : AbstractValidator<UpdateClientModel>
+    public class UpdateClientValidator : AbstractValidator<AlterClientModel>
     {
         public UpdateClientValidator()
         {

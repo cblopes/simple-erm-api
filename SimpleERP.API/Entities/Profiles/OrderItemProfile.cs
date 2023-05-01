@@ -7,9 +7,9 @@ namespace SimpleERP.API.Entities.Profiles
     {
         public OrderItemProfile() 
         { 
-            CreateMap<CreateOrderItemViewModel, OrderItem>();
+            CreateMap<CreateOrderItemModel, OrderItem>();
 
-            CreateMap<AlterOrderItemViewModel, OrderItem>();
+            CreateMap<AlterOrderItemModel, OrderItem>();
         }
     }
 }

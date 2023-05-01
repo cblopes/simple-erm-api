@@ -34,9 +34,9 @@ namespace SimpleERP.API.Controllers
             {
                 var orders = await _orderServices.GetAllOrdersAsync();
 
-                var orderViewModel = _mapper.ProjectTo<OrderViewModel>(orders.AsQueryable()).ToList();
+                var ordersViewModel = _mapper.ProjectTo<AllOrdersViewModel>(orders.AsQueryable()).ToList();
 
-                return Ok(orderViewModel);
+                return Ok(ordersViewModel);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace SimpleERP.API.Controllers
         }
 
         /// <summary>
-        /// Obter um pedidopor por Id
+        /// Obter um pedido por por Id
         /// </summary>
         /// <param name="id">Identificador do pedido</param>
         /// <returns>Dados do pedido</returns>
@@ -147,15 +147,25 @@ namespace SimpleERP.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Adicionar item ao pedido
+        /// </summary>
+        /// <param name="orderId">Identificador do pedido</param>
+        /// <param name="input">Dados do item de pedido</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="204">Sucesso</response>
+        /// <response code="400">Má requisição</response>
         [HttpPost("{orderId}/items")]
-        public async Task<IActionResult> AddItem(Guid orderId, CreateOrderItemViewModel input)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddItem(Guid orderId, CreateOrderItemModel input)
         {
             try
             {
                 var item = _mapper.Map<OrderItem>(input);
                 await _orderServices.AddItemAsync(orderId, item);
 
-                return CreatedAtAction(nameof(GetOrderById), new { id = orderId} );
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -163,8 +173,18 @@ namespace SimpleERP.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Alterar a quantidade de um item do pedido
+        /// </summary>
+        /// <param name="orderId">Identificador do pedido</param>
+        /// <param name="itemId">Identificador do item</param>
+        /// <param name="input">Quantidade a ser alterada</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="204">Sucesso</response>
+        /// <response code="400">Má requisição</response>
         [HttpPatch("{orderId}/items/{itemId}")]
-        public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemViewModel input)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemModel input)
         {
             try
             {
@@ -179,6 +199,14 @@ namespace SimpleERP.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Remover um item do pedido
+        /// </summary>
+        /// <param name="orderId">Identificador do pedido</param>
+        /// <param name="itemId">Identificador do item</param>
+        /// <returns>Sem retorno</returns>
+        /// <response code="204">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpDelete("{orderId}/items/{itemId}")]
         public async Task<IActionResult> DeleteItem(Guid orderId, Guid itemId)
         {

@@ -10,7 +10,7 @@ namespace SimpleERP.API.Entities.Profiles
         {
             CreateMap<CreateProductModel, Product>();
 
-            CreateMap<UpdateProductModel, Product>();
+            CreateMap<AlterProductModel, Product>();
 
             CreateMap<Product, ProductViewModel>();
         }

@@ -1,6 +1,6 @@
 ﻿namespace SimpleERP.API.Models
 {
-    public class UpdateProductModel
+    public class AlterProductModel
     {
         public string Description { get; set; }
         public int QuantityInStock { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace SimpleERP.API.Models
 {
-    public class AlterOrderItemViewModel
+    public class AlterOrderItemModel
     {
         public int Quantity { get; set; }
     }

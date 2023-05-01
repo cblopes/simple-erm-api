@@ -10,7 +10,7 @@ namespace SimpleERP.API.Entities.Profiles
         {
             CreateMap<CreateClientModel, Client>();
 
-            CreateMap<UpdateClientModel, Client>();
+            CreateMap<AlterClientModel, Client>();
 
             CreateMap<Client, ClientViewModel>();
         }

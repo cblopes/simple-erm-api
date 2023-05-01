@@ -105,7 +105,7 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(Guid id, UpdateClientModel model)
+        public async Task<IActionResult> Put(Guid id, AlterClientModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);            
 
