@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace SimpleERP.MVC.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : Service, IAuthService
     {
         private readonly HttpClient _httpClient;
 
@@ -23,17 +23,25 @@ namespace SimpleERP.MVC.Services
                 Encoding.UTF8,
                 "application/json");
 
+            var response = await _httpClient.PostAsync("https://localhost:7182/api/v1/accounts/login", loginContent);
+            
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             };
 
-            var response = await _httpClient.PostAsync("https://localhost:7182/api/v1/accounts/login", loginContent);
+            if (!HandleResponseErros(response))
+            {
+                return new ResponseUserLogin
+                {
+                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                };
+            }
 
             return JsonSerializer.Deserialize<ResponseUserLogin>(await response.Content.ReadAsStringAsync(), options);
         }
 
-        public async Task<ResponseUserLogin> Register(RegisterUserViewModel registerUser)
+        public async Task<ResponseUserLogin> Register(RegisterUser registerUser)
         {
             var registerContent = new StringContent(
                 JsonSerializer.Serialize(registerUser),
@@ -41,6 +49,19 @@ namespace SimpleERP.MVC.Services
                 "application;/json");
 
             var response = await _httpClient.PostAsync("https://localhost:7182/api/v1/accounts/register", registerContent);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
+
+            if (!HandleResponseErros(response))
+            {
+                return new ResponseUserLogin
+                {
+                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                };
+            }
 
             return JsonSerializer.Deserialize<ResponseUserLogin>(await response.Content.ReadAsStringAsync());
         }

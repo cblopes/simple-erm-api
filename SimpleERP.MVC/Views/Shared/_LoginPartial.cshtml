@@ -1,8 +1,11 @@
-﻿<ul class="navbar-nav text-end">
-    @if (Context.User.Identity.IsAuthenticated)
+﻿@using SimpleERP.MVC.Extensions;
+@inject IUser AppUser
+
+<ul class="navbar-nav text-end">
+    @if (AppUser.IsAuthenticated())
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" title="Manage">Olá!</a>
+            <a class="nav-link text-dark" title="Manage">Olá @AppUser.GetUserEmail()!</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Identity" asp-action="Logout">Sair</a>

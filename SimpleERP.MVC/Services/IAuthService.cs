@@ -5,6 +5,6 @@ namespace SimpleERP.MVC.Services
     public interface IAuthService
     {
         Task<ResponseUserLogin> Login(LoginUserViewModel loginUser);
-        Task<ResponseUserLogin> Register(RegisterUserViewModel registerUser);
+        Task<ResponseUserLogin> Register(RegisterUser registerUser);
     }
 }

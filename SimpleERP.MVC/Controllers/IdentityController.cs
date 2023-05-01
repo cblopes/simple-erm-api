@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace SimpleERP.MVC.Controllers
 {
     [Route("/accounts")]
-    public class IdentityController : Controller
+    public class IdentityController : MainController
     {
         private readonly IAuthService _authService;
 
@@ -25,13 +25,15 @@ namespace SimpleERP.MVC.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserViewModel userRegister)
+        public async Task<IActionResult> Register(RegisterUser userRegister)
         {
             if (!ModelState.IsValid) return View(userRegister);
 
             var response = await _authService.Register(userRegister);
 
-            await LoginRealese(response);
+            if (HasErrorsResponse(response.ResponseResult)) return View(userRegister);
+
+            await LoginRelease(response);
 
             return RedirectToAction("Index", "Home");
         }
@@ -49,7 +51,9 @@ namespace SimpleERP.MVC.Controllers
 
             var response = await _authService.Login(loginUser);
 
-            await LoginRealese(response);
+            if (HasErrorsResponse(response.ResponseResult)) return View(loginUser);
+
+            await LoginRelease(response);
 
             return RedirectToAction("Index", "Home");
         }
@@ -60,13 +64,13 @@ namespace SimpleERP.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private async Task LoginRealese(ResponseUserLogin response)
+        private async Task LoginRelease(ResponseUserLogin response)
         {
-            // var token = GetFormmatedToken(response.AccessToken);
+            var token = GetFormmatedToken(response.AccessToken);
 
             var claims = new List<Claim>();
             claims.Add(new Claim("JWT", response.AccessToken));
-            // claims.AddRange(token.Claims);
+            claims.AddRange(token.Claims);
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

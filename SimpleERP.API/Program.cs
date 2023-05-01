@@ -13,7 +13,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DataApiCs");
 builder.Services.AddDbContext<ErpDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(connectionString));
@@ -50,10 +49,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers().AddFluentValidation();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// Validator's
 builder.Services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
 builder.Services.AddTransient<IValidator<AlterClientModel>, UpdateClientValidator>();
 
@@ -63,7 +60,6 @@ builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

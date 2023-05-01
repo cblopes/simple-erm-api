@@ -2,7 +2,7 @@
 
 namespace SimpleERP.MVC.Models
 {
-    public class RegisterUserViewModel
+    public class RegisterUser
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [EmailAddress(ErrorMessage = "Digite um e-mail válido.")]
@@ -31,5 +31,6 @@ namespace SimpleERP.MVC.Models
     {
         public string AccessToken { get; set; }
         public int ExpiresIn { get; set; }
+        public ResponseResult ResponseResult { get; set; }
     }
 }
