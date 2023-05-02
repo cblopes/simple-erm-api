@@ -45,7 +45,7 @@ namespace SimpleERP.MVC.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserViewModel loginUser)
+        public async Task<IActionResult> Login(LoginUser loginUser)
         {
             if (!ModelState.IsValid) return View(loginUser);
 
@@ -59,7 +59,7 @@ namespace SimpleERP.MVC.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout(LoginUserViewModel userRegister)
+        public async Task<IActionResult> Logout(LoginUser userRegister)
         {
             return RedirectToAction("Index", "Home");
         }

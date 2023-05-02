@@ -6,12 +6,12 @@ using SimpleERP.API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace SimpleERP.API.Controllers
 {
-    [ApiController]
     [Route("api/v1/accounts")]
-    public class AuthController : ControllerBase
+    public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -32,13 +32,13 @@ namespace SimpleERP.API.Controllers
         /// <param name="registerUser">Dados do usuário</param>
         /// <returns>Token JWT</returns>
         /// <response code="200">Sucesso</response>
-        /// <response code="400">Má Requisição</response>
+        /// <response code="400">Má requisição</response>
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register(RegisterUserViewModel registerUser)
+        public async Task<ActionResult> Register(RegisterUser registerUser)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser
             {
@@ -51,11 +51,15 @@ namespace SimpleERP.API.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
-                return Ok(GenerateJwt());
+                return CustomResponse(await GenerateJwt(registerUser.Email));
             }
 
-            return BadRequest(result.Errors);
+            foreach (var error in result.Errors)
+            {
+                AddProcessingError(error.Description);
+            }
+
+            return CustomResponse();
         }
 
         /// <summary>
@@ -64,29 +68,64 @@ namespace SimpleERP.API.Controllers
         /// <param name="loginUser">Dados do usuário</param>
         /// <returns>Token JWT</returns>
         /// <response code="200">Sucesso</response>
-        /// <response code="400">Má Requisição</response>
+        /// <response code="400">Má requisição</response>
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Login(LoginUserViewModel loginUser)
+        public async Task<ActionResult> Login(LoginUser loginUser)
         {
-            if (!ModelState.IsValid) return BadRequest(loginUser);
+            if (!ModelState.IsValid) return CustomResponse(loginUser);
 
             var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
             if (result.Succeeded)
             {
-                return Ok(GenerateJwt());
+                return CustomResponse(await GenerateJwt(loginUser.Email));
             }
+
             if (result.IsLockedOut)
             {
-                return BadRequest(new { error = "Usuário temporariamente indisponível." });
+                AddProcessingError("Usuário bloqueado devido a várias tentativas inválidas.");
+                return CustomResponse();
             }
 
-            return BadRequest(new { error = "Usuário ou senha incorretos." });
+            AddProcessingError("Usuário ou senha incorretos.");
+            return CustomResponse();
         }
 
-        private object GenerateJwt()
+        private async Task<UserLoginResponse> GenerateJwt(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var identityClaims = await GetClaimsUser(claims, user);
+            var encodedToken = EncodedToken(identityClaims);
+
+            return GetResponseToken(encodedToken, user, claims);
+        }
+
+        private async Task<ClaimsIdentity> GetClaimsUser(ICollection<Claim> claims, IdentityUser user)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+            
+            foreach (var userRole in userRoles)
+            {
+                claims.Add(new Claim("role", userRole));
+            }
+
+            var identityClaims = new ClaimsIdentity();
+            identityClaims.AddClaims(claims);
+
+            return identityClaims;
+        }
+
+        private string EncodedToken(ClaimsIdentity identityClaims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -94,16 +133,30 @@ namespace SimpleERP.API.Controllers
             {
                 Issuer = _appSettings.Issuer,
                 Audience = _appSettings.ValidIn,
+                Subject = identityClaims,
                 Expires = DateTime.UtcNow.AddHours(_appSettings.HoursExpiration),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
-            var encodedToken = tokenHandler.WriteToken(token);
-            var tokenViewModel = new { 
-                accessToken = encodedToken, 
-                expiresIn = _appSettings.HoursExpiration * 600 };
-
-            return tokenViewModel;
+            return tokenHandler.WriteToken(token);
         }
+
+        private UserLoginResponse GetResponseToken(string encodedToken, IdentityUser user, IEnumerable<Claim> claims)
+        {
+            return new UserLoginResponse
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.HoursExpiration).TotalSeconds,
+                UserToken = new UserToken
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c => new UserClaim { Type = c.Type, Value = c.Value })
+                }
+            };
+        }
+
+        private static long ToUnixEpochDate(DateTime date)
+            => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
 }

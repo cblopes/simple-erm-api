@@ -7,7 +7,7 @@ namespace SimpleERP.MVC.Controllers
     {
         protected bool HasErrorsResponse(ResponseResult response)
         {
-            if (response != null && response.Errors.Mensagens.Any())
+            if (response != null && response.Errors.Messages.Any())
             {
                 return true;
             }

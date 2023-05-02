@@ -16,6 +16,6 @@ namespace SimpleERP.MVC.Models
 
     public class ResponseErrorMessages
     {
-        public List<string> Mensagens { get; set; }
+        public List<string> Messages { get; set; }
     }
 }

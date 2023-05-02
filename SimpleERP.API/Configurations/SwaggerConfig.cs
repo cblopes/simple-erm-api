@@ -4,7 +4,7 @@ namespace SimpleERP.API.Configurations
 {
     public static class SwaggerConfig
     {
-        public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -56,6 +56,17 @@ namespace SimpleERP.API.Configurations
             });
 
             return services;
+        }
+
+        public static IApplicationBuilder UseSwaggerConfiguration(this IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
+
+            return app;
         }
     }
 }

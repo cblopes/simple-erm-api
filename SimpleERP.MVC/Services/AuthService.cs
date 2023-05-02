@@ -16,7 +16,7 @@ namespace SimpleERP.MVC.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ResponseUserLogin> Login(LoginUserViewModel loginUser)
+        public async Task<ResponseUserLogin> Login(LoginUser loginUser)
         {
             var loginContent = new StringContent(
                 JsonSerializer.Serialize(loginUser),
