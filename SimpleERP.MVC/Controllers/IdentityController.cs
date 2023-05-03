@@ -58,9 +58,10 @@ namespace SimpleERP.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout(LoginUser userRegister)
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 

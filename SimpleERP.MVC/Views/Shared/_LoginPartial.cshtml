@@ -5,7 +5,7 @@
     @if (AppUser.IsAuthenticated())
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" title="Manage">Olá @AppUser.GetUserEmail()!</a>
+            <a class="nav-link text-dark" title="Manage">Olá, @AppUser.GetUserEmail()!</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Identity" asp-action="Logout">Sair</a>

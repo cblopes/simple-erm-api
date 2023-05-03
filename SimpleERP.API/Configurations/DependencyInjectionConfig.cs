@@ -1,5 +1,8 @@
-﻿using SimpleERP.API.Data.Repositories;
+﻿using FluentValidation;
+using SimpleERP.API.Data.Repositories;
 using SimpleERP.API.Interfaces;
+using SimpleERP.API.Models.Validators;
+using SimpleERP.API.Models;
 using SimpleERP.API.Services;
 
 namespace SimpleERP.API.Configurations
@@ -18,6 +21,9 @@ namespace SimpleERP.API.Configurations
             services.AddScoped<IOrderServices, OrderServices>();
 
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+
+            services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
+            services.AddTransient<IValidator<AlterClientModel>, UpdateClientValidator>();
 
             return services;
         }
