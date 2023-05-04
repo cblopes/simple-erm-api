@@ -1,6 +1,7 @@
 ﻿using SimpleERP.API.Entities;
 using SimpleERP.API.Entities.Enums;
 using SimpleERP.API.Interfaces;
+using System.Reflection.Metadata;
 
 namespace SimpleERP.API.Services
 {
@@ -31,7 +32,9 @@ namespace SimpleERP.API.Services
 
         public async Task CreateClientAsync(Client input)
         {
-            var client = await _clientRepository.GetByCpfCnpjAsync(input.CpfCnpj);
+            var document = input.CpfCnpj.Replace(".", "").Replace("-", "").Replace("/", "");
+
+            var client = await _clientRepository.GetByCpfCnpjAsync(document);
 
             if (client != null && client.IsActive) throw new Exception("Cliente já cadastrado.");
 

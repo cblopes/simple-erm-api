@@ -8,9 +8,8 @@ using SimpleERP.API.Models;
 namespace SimpleERP.API.Controllers
 {
     [Authorize]
-    [ApiController]
     [Route("api/v1/clients")]
-    public class ClientController : ControllerBase
+    public class ClientController : MainController
     {
         private readonly IMapper _mapper;
         private readonly IClientServices _clientServices;
@@ -29,11 +28,19 @@ namespace SimpleERP.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var clients = await _clientServices.GetAllClientsAsync();
+            try
+            {
+                var clients = await _clientServices.GetAllClientsAsync();
 
-            var clientViewModel = _mapper.ProjectTo<ClientViewModel>(clients.AsQueryable()).ToList();
+                var clientViewModel = _mapper.ProjectTo<ClientViewModel>(clients.AsQueryable()).ToList();
 
-            return Ok(clientViewModel);
+                return Ok(clientViewModel);
+            }
+            catch (Exception ex)
+            {
+                AddProcessingError(ex.Message);
+                return CustomResponse();
+            }
         }
 
         /// <summary>
@@ -42,10 +49,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="id">Identificador do cliente</param>
         /// <returns>Informações de um cliente</returns>
         /// <response code="200">Sucesso</response>
-        /// <response code="404">Não encontrado</response>
+        /// <response code="400">Má requisição</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
@@ -56,9 +63,10 @@ namespace SimpleERP.API.Controllers
 
                 return Ok(clientViewModel);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                return NotFound( new { Error = ex.Message } );
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -88,7 +96,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest( new { error = ex.Message } );
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -100,11 +109,9 @@ namespace SimpleERP.API.Controllers
         /// <returns>Sem retorno</returns>
         /// <response code="204">Sucesso</response>
         /// <response code="400">Má requisição</response>
-        /// <response code="404">Não encontrado</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(Guid id, AlterClientModel model)
         {
             if (!ModelState.IsValid) return BadRequest(model);            
@@ -119,7 +126,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound( new { error = ex.Message } );
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }            
         }
 
@@ -129,10 +137,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="id">Identificador do cliente</param>
         /// <returns>Sem retorno</returns>
         /// <response code="204">Sucesso</response>
-        /// <response code="404">Não encontrado</response>
+        /// <response code="400">Má requisição</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -143,7 +151,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound( new { error = ex.Message } );
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
     }

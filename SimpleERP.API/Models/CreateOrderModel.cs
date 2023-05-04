@@ -1,6 +1,6 @@
 ﻿namespace SimpleERP.API.Models
 {
-    public class CreateOrderViewModel
+    public class CreateOrderModel
     {
         public Guid ClientId { get; set; }
     }

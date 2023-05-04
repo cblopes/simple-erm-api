@@ -8,9 +8,8 @@ using SimpleERP.API.Models;
 namespace SimpleERP.API.Controllers
 {
     [Authorize]
-    [ApiController]
     [Route("api/v1/orders")]
-    public class OrderController : Controller
+    public class OrderController : MainController
     {
         private readonly IMapper _mapper;
         private readonly IOrderServices _orderServices;
@@ -40,7 +39,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -66,7 +66,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
             
         }
@@ -79,7 +80,9 @@ namespace SimpleERP.API.Controllers
         /// <reponse code="201">Sucesso</reponse>
         /// <reponse code="400">Má requisição</reponse>
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(CreateOrderViewModel input)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateOrder(CreateOrderModel input)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -95,7 +98,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -105,10 +109,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="id">Identificador do pedido</param>
         /// <returns>Sem retorno</returns>
         /// <response code="200">Sucesso</response>
-        /// <response code="404">Não encontrado</response>
+        /// <response code="400">Má requisição</response>
         [HttpPatch("{id}/finish")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> FinishOrder(Guid id)
         {
             try
@@ -119,7 +123,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -129,10 +134,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="id">Identificador do pedido</param>
         /// <returns>Sem retorno</returns>
         /// <response code="200">Sucesso</response>
-        /// <response code="404">Não encontrado</response>
+        /// <response code="400">Má requisição</response>
         [HttpPatch("{id}/cancel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CancelOrder(Guid id)
         {
             try
@@ -143,7 +148,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -169,7 +175,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -183,6 +190,7 @@ namespace SimpleERP.API.Controllers
         /// <response code="204">Sucesso</response>
         /// <response code="400">Má requisição</response>
         [HttpPatch("{orderId}/items/{itemId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterItem(Guid orderId, Guid itemId, AlterOrderItemModel input)
         {
@@ -195,7 +203,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
 
@@ -206,8 +215,10 @@ namespace SimpleERP.API.Controllers
         /// <param name="itemId">Identificador do item</param>
         /// <returns>Sem retorno</returns>
         /// <response code="204">Sucesso</response>
-        /// <response code="404">Não encontrado</response>
+        /// <response code="400">Má requisição</response>
         [HttpDelete("{orderId}/items/{itemId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteItem(Guid orderId, Guid itemId)
         {
             try
@@ -218,7 +229,8 @@ namespace SimpleERP.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { error = ex.Message });
+                AddProcessingError(ex.Message);
+                return CustomResponse();
             }
         }
     }

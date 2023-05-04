@@ -23,7 +23,12 @@ namespace SimpleERP.API.Configurations
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
             services.AddTransient<IValidator<CreateClientModel>, CreateClientValidator>();
-            services.AddTransient<IValidator<AlterClientModel>, UpdateClientValidator>();
+            services.AddTransient<IValidator<AlterClientModel>, AlterClientValidator>();
+
+            services.AddTransient<IValidator<CreateProductModel>, CreateProductValidator>();
+            services.AddTransient<IValidator<AlterProductModel>, AlterProductValidator>();
+
+            services.AddTransient<IValidator<CreateOrderModel>, CreateOrderValidator>();
 
             return services;
         }
