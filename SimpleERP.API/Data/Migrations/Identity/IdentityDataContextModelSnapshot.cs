@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 
 #nullable disable
 
-namespace SimpleERP.API.Migrations
+namespace SimpleERP.API.Data.Migrations.Identity
 {
     [DbContext(typeof(IdentityDataContext))]
     partial class IdentityDataContextModelSnapshot : ModelSnapshot

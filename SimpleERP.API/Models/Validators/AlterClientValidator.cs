@@ -14,7 +14,6 @@ namespace SimpleERP.API.Models.Validators
                     .WithMessage("O nome deve conter pelo menos 3 caracteres.")
                 .MaximumLength(100)
                     .WithMessage("O nome não pode conter mais do que 100 caracteres.");
-
         }
     }
 }

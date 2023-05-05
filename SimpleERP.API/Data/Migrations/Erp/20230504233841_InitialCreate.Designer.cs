@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 
 #nullable disable
 
-namespace SimpleERP.API.Data.Migrations
+namespace SimpleERP.API.Data.Migrations.Erp
 {
     [DbContext(typeof(ErpDbContext))]
-    partial class ErpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230504233841_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,6 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("CpfCnpj")
                         .IsRequired()
-                        .HasMaxLength(14)
                         .HasColumnType("varchar(14)");
 
                     b.Property<bool>("IsActive")
@@ -38,12 +40,11 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
@@ -59,7 +60,7 @@ namespace SimpleERP.API.Data.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<char>("OrderStatus")
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("varchar(1)");
 
                     b.Property<DateTime>("UpdatedIn")
                         .HasColumnType("datetime");
@@ -71,7 +72,7 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
@@ -101,7 +102,7 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
@@ -112,12 +113,10 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<bool>("IsDeleted")
@@ -131,7 +130,7 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>

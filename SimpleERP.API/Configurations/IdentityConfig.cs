@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 using SimpleERP.API.Extensions;
 using System.Text;
 

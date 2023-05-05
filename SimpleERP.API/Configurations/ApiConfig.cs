@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 
 namespace SimpleERP.API.Configurations
 {

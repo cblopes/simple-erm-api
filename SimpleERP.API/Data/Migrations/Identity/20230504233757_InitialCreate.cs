@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SimpleERP.API.Migrations
+namespace SimpleERP.API.Data.Migrations.Identity
 {
     /// <inheritdoc />
-    public partial class CreateTableIdentity : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

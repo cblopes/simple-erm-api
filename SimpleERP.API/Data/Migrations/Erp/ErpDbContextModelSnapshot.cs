@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 
 #nullable disable
 
-namespace SimpleERP.API.Data.Migrations
+namespace SimpleERP.API.Data.Migrations.Erp
 {
     [DbContext(typeof(ErpDbContext))]
-    [Migration("20230429191053_InitialCreate")]
-    partial class InitialCreate
+    partial class ErpDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +30,6 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("CpfCnpj")
                         .IsRequired()
-                        .HasMaxLength(14)
                         .HasColumnType("varchar(14)");
 
                     b.Property<bool>("IsActive")
@@ -41,17 +37,17 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
@@ -61,17 +57,19 @@ namespace SimpleERP.API.Data.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<char>("OrderStatus")
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("varchar(1)");
 
                     b.Property<DateTime>("UpdatedIn")
-                        .HasColumnType("Datetime");
+                        .HasColumnType("datetime");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
@@ -101,7 +99,7 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
@@ -112,12 +110,10 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<bool>("IsDeleted")
@@ -131,18 +127,16 @@ namespace SimpleERP.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
-                    b.HasOne("SimpleERP.API.Entities.Client", "Client")
-                        .WithMany("Orders")
-                        .HasForeignKey("Id")
+                    b.HasOne("SimpleERP.API.Entities.Client", null)
+                        .WithMany()
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.OrderItem", b =>
@@ -153,28 +147,16 @@ namespace SimpleERP.API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SimpleERP.API.Entities.Product", "Product")
-                        .WithMany("OrderItems")
+                    b.HasOne("SimpleERP.API.Entities.Product", null)
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("SimpleERP.API.Entities.Client", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("SimpleERP.API.Entities.Order", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("SimpleERP.API.Entities.Product", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

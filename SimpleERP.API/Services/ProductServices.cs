@@ -35,8 +35,11 @@ namespace SimpleERP.API.Services
 
             if (product != null && !product.IsDeleted) throw new Exception("Produto já cadastrado.");
 
+            await _productRepository.CreateAsync(input);
+            /*
             if (product != null && product.IsDeleted)
             {
+                product.Id = input.Id;
                 product.Update(input.Description, input.QuantityInStock, input.Price);
                 product.IsDeleted = false;
 
@@ -45,7 +48,7 @@ namespace SimpleERP.API.Services
             else
             {
                 await _productRepository.CreateAsync(input);
-            }
+            }*/
         }
 
         public async Task UpdateProductAsync(Guid id, Product input)

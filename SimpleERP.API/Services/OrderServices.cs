@@ -54,6 +54,8 @@ namespace SimpleERP.API.Services
                 case OrderStatus.Canceled: throw new Exception("Pedido cancelado.");
             }
 
+            if (order.Value == 0) throw new Exception("O valor do pedido é igual a zero.");
+
             order.FinishOrder();
             order.UpdateTime();
 

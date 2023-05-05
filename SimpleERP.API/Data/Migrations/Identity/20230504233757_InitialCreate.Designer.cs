@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleERP.API.Data;
+using SimpleERP.API.Data.Contexts;
 
 #nullable disable
 
-namespace SimpleERP.API.Migrations
+namespace SimpleERP.API.Data.Migrations.Identity
 {
     [DbContext(typeof(IdentityDataContext))]
-    [Migration("20230429182037_CreateTableIdentity")]
-    partial class CreateTableIdentity
+    [Migration("20230504233757_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

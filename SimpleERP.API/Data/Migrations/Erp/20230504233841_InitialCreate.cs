@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SimpleERP.API.Data.Migrations
+namespace SimpleERP.API.Data.Migrations.Erp
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -16,8 +16,8 @@ namespace SimpleERP.API.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CpfCnpj = table.Column<string>(type: "varchar(14)", maxLength: 14, nullable: false),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    CpfCnpj = table.Column<string>(type: "varchar(14)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -30,8 +30,8 @@ namespace SimpleERP.API.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
-                    Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Code = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(100)", nullable: false),
                     QuantityInStock = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -48,16 +48,16 @@ namespace SimpleERP.API.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedIn = table.Column<DateTime>(type: "datetime", nullable: false),
-                    OrderStatus = table.Column<string>(type: "nvarchar(1)", nullable: false),
-                    UpdatedIn = table.Column<DateTime>(type: "Datetime", nullable: false),
+                    OrderStatus = table.Column<string>(type: "varchar(1)", nullable: false),
+                    UpdatedIn = table.Column<DateTime>(type: "datetime", nullable: false),
                     Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Clients_Id",
-                        column: x => x.Id,
+                        name: "FK_Orders_Clients_ClientId",
+                        column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -100,6 +100,11 @@ namespace SimpleERP.API.Data.Migrations
                 name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_ClientId",
+                table: "Orders",
+                column: "ClientId");
         }
 
         /// <inheritdoc />
