@@ -6,16 +6,16 @@ namespace SimpleERP.API.Services
 {
     public class OrderServices : IOrderServices
     {
+        private readonly IClientRepository _clientRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IClientRepository _clientRepository;
         private readonly IProductRepository _productRepository;
 
         public OrderServices(IOrderRepository orderRepository, IClientRepository clientRepository, 
                              IOrderItemRepository orderItemRepository, IProductRepository productRepository)
         {
-            _orderRepository = orderRepository;
             _clientRepository = clientRepository;
+            _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _productRepository = productRepository;
         }
