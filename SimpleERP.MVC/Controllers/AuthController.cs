@@ -8,23 +8,22 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace SimpleERP.MVC.Controllers
 {
-    [Route("/accounts")]
-    public class IdentityController : MainController
+    public class AuthController : MainController
     {
         private readonly IAuthService _authService;
 
-        public IdentityController(IAuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
-        [HttpGet("register")]
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterUser userRegister)
         {
             if (!ModelState.IsValid) return View(userRegister);
@@ -38,14 +37,14 @@ namespace SimpleERP.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("login")]
+        [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginUser loginUser, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -63,7 +62,7 @@ namespace SimpleERP.MVC.Controllers
             return LocalRedirect(returnUrl);
         }
 
-        [HttpGet("logout")]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
