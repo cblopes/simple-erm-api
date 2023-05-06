@@ -33,7 +33,7 @@ namespace SimpleERP.API.Services
         {
             var product = await _productRepository.GetByCodeAsync(input.Code);
 
-            if (product != null && !product.IsDeleted) throw new Exception("Produto já cadastrado.");
+            if (product != null && !product.IsDeleted) throw new ApplicationException("Produto já cadastrado.");
 
             await _productRepository.CreateAsync(input);
         }

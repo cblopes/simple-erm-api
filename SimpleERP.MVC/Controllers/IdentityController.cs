@@ -39,14 +39,17 @@ namespace SimpleERP.MVC.Controllers
         }
 
         [HttpGet("login")]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUser loginUser)
+        public async Task<IActionResult> Login(LoginUser loginUser, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
+
             if (!ModelState.IsValid) return View(loginUser);
 
             var response = await _authService.Login(loginUser);
@@ -55,7 +58,9 @@ namespace SimpleERP.MVC.Controllers
 
             await LoginRelease(response);
 
-            return RedirectToAction("Index", "Home");
+            if (returnUrl == null) return RedirectToAction("Index", "Home");
+
+            return LocalRedirect(returnUrl);
         }
 
         [HttpGet("logout")]

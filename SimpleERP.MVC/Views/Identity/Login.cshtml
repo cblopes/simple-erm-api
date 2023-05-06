@@ -14,24 +14,31 @@
             <vc:Summary></vc:Summary>
 
             <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                <div class="form-group">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
+                <!--
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" type="email" id="floatingEmail">
+                    <label asp-for="Email" for="floatingEmail">E-mail</label>
                     <span asp-validation-for="Email" class="text-danger"></span>
+                </div>-->
+
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" asp-for="Email">
+                    <label asp-for="Email" for="floatingEmail">E-mail</label>
+                    <span asp-validation-for="Email" for="floatingEmail" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input type="password" asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+
+                <div class="form-floating mb-3">
+                    <input type="password" asp-for="Password" class="form-control" id="floatingPass" placeholder="Password"/>
+                    <label asp-for="Password" for="floatingPass">Senha</label>
+                    <span asp-validation-for="Password" for="floatingPass" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                <div>
+                    <button type="submit" class="btn btn-outline-primary btn-block">Entrar</button>
                 </div>
             </form>
-        </div>
-        <div class="card-footer text-center">Ainda não tem uma conta? <a asp-controller="Identity" asp-action="Register">Criar uma conta</a></div>
+        </div>        
     </div>
 
 </section>

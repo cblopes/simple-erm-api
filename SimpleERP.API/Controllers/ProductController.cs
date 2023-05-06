@@ -94,7 +94,7 @@ namespace SimpleERP.API.Controllers
 
                 return CreatedAtAction(nameof(GetById), new { id = productViewModel.Id }, productViewModel);
             }
-            catch (Exception ex)
+            catch (ApplicationException ex)
             {
                 AddProcessingError(ex.Message);
                 return CustomResponse();
