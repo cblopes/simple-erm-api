@@ -9,6 +9,8 @@ namespace SimpleERP.MVC.Configurations
         {
             services.AddHttpClient<IAuthService, AuthService>();
 
+            services.AddHttpClient<IClientService, ClientService>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IUser, AspNetUser>();

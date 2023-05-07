@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Hosting.Internal;
 using SimpleERP.MVC.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
