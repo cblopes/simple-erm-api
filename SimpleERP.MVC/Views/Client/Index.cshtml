@@ -4,12 +4,33 @@
     ViewData["Title"] = "Clientes";
 }
 
-<h2>Clientes</h2>
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Clientes</li>
+    </ol>
+</nav>
 
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Cadastrar Novo Cliente</a>
-</p>
-<table class="table">
+<h1>Clientes</h1>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <a asp-action="Create" class="btn btn-outline-primary">Novo Cliente</a>
+    </div>    
+        
+    @using (Html.BeginForm("Index", "Client", FormMethod.Get, new { @class = "col-4 text-end" }))
+    {
+        <div class="input-group">
+            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do cliente", @for="clientId"})
+            <button class="btn btn-outline-primary" type="submit" id="clientId">Pesquisar</button>
+        </div>
+    }
+</div>
+
+<br />
+<table class="table table">
     <thead>
         <tr>
             <th>
@@ -37,8 +58,10 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.ActionLink("Alterar", "Edit", new { /* id=item.PrimaryKey */ })
-                @Html.ActionLink("Excluir", "Delete", new { /* id=item.PrimaryKey */ })
+                <div class="btn-group">
+                    @Html.ActionLink("Alterar", "Edit", "Client", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
+                    @Html.ActionLink("Excluir", "Delete", "Client", new { id = item.Id } , new { @class="btn btn-danger" })
+                </div>                
             </td>
         </tr>
 }

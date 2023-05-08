@@ -20,7 +20,7 @@ namespace SimpleERP.MVC.Services
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + _user.GetUserToken());
         }
 
-        public async Task<IEnumerable<ClientViewModel>> GetClients()
+        public async Task<IEnumerable<ClientViewModel>> GetClientsAsync()
         {
             var response = await _httpClient.GetAsync("/api/v1/clients");
 
@@ -33,7 +33,20 @@ namespace SimpleERP.MVC.Services
             return Enumerable.Empty<ClientViewModel>();
         }
 
-        public async Task<CreateClientModel> CreateClient(CreateClientModel model)
+        public async Task<ClientViewModel> GetClientByIdAsync(Guid? id)
+        {
+            var response = await _httpClient.GetAsync($"/api/v1/clients/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var client = await DeserializeObjectResponse<ClientViewModel>(response);
+                return client;
+            }
+
+            return new ClientViewModel();
+        }
+
+        public async Task<CreateClientModel> CreateClientAsync(CreateClientModel model)
         {
             var modelContent = GetContent(model);
 
@@ -48,6 +61,39 @@ namespace SimpleERP.MVC.Services
             }
 
             return await DeserializeObjectResponse<CreateClientModel>(response);
+        }
+
+        public async Task<AlterClientModel> AlterClientAsync(Guid id, AlterClientModel model)
+        {
+            var modelContent = GetContent(model);
+
+            var response = await _httpClient.PutAsync($"/api/v1/clients/{id}", modelContent);
+
+            if (!HandleResponseErros(response))
+            {
+                return new AlterClientModel
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                };
+            }
+
+            return await DeserializeObjectResponse<AlterClientModel>(response);
+        }
+
+        public async Task<DeleteClientModel> DeleteClientAsync(Guid id)
+        {
+
+            var response = await _httpClient.DeleteAsync($"/api/v1/clients/{id}");
+
+            if (!HandleResponseErros(response))
+            {
+                return new DeleteClientModel
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                };
+            }
+
+            return await DeserializeObjectResponse<DeleteClientModel>(response);
         }
     }
 }

@@ -14,27 +14,27 @@ namespace SimpleERP.MVC.Controllers
             _clientService = clientService;
         }
 
-        // GET: ClientController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid? id)
         {
-            var clientsList = await _clientService.GetClients();
+            var clients = await _clientService.GetClientsAsync();
 
-            return View(clientsList);
+            if (id != null)
+            {
+                var client = await _clientService.GetClientByIdAsync(id);
+
+                clients = new List<ClientViewModel> { client };
+
+                return View(clients);
+            }
+
+            return View(clients);
         }
 
-        // GET: ClientController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ClientController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ClientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateClientModel input)
@@ -43,7 +43,7 @@ namespace SimpleERP.MVC.Controllers
             {
                 //if (!ModelState.IsValid) return View(input);
 
-                var response = await _clientService.CreateClient(input);
+                var response = await _clientService.CreateClientAsync(input);
 
                 if (HasErrorsResponse(response.ResponseResult)) return View(input);
 
@@ -55,45 +55,63 @@ namespace SimpleERP.MVC.Controllers
             }
         }
 
-        // GET: ClientController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            return View();
+            var client = await _clientService.GetClientByIdAsync(id);
+
+            return View(client);
         }
 
         // POST: ClientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, ClientViewModel input)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                ModelState.Remove("CpfCnpj");
+
+                AlterClientModel client = new AlterClientModel { Name = input.Name };
+
+                var response = await _clientService.AlterClientAsync(id, client);
+
+                if (HasErrorsResponse(response.ResponseResult)) return View(input);
+
+                return RedirectToAction("Index", "Client");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Client");
             }
         }
 
         // GET: ClientController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return View();
+            var client = await _clientService.GetClientByIdAsync(id);
+
+            return View(client);
         }
 
         // POST: ClientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(Guid id, DeleteClientModel input)
         {
             try
             {
+                ModelState.Remove("ResponseResult");
+
+                var response = await _clientService.DeleteClientAsync(id);
+
+                if (HasErrorsResponse(response.ResponseResult)) return View(response);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
     }

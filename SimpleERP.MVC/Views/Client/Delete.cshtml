@@ -1,7 +1,7 @@
-﻿@model SimpleERP.MVC.Models.CreateClientModel
+﻿@model SimpleERP.MVC.Models.ClientViewModel
 
 @{
-    ViewData["Title"] = "Cadastrar Novo Cliente";
+    ViewData["Title"] = "Remover Cliente";
 }
 
 <br />
@@ -9,39 +9,38 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
         <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Index">Clientes</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Cadastrar Cliente</li>
+        <li class="breadcrumb-item active" aria-current="page">Remover Cliente</li>
     </ol>
 </nav>
 
-<h1>Cadastrar Cliente</h1>
+<h1>Remover Cliente</h1>
+<h3>Tem certeza que deseja remover este cliente?</h3>
 <hr />
 
 <div class="row justify-content-center">
-    <div class="col-md-4">        
-        <form asp-action="Create">
+    <div class="col-md-4">
+        <form asp-action="Delete">
             <vc:summary></vc:summary>
 
             <br />
 
             <div class="mb-3">
+                <label asp-for="Id" class="form-label"></label>
+                <input asp-for="Id" type="text" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
                 <label asp-for="CpfCnpj" class="form-label">CPF/CNPJ</label>
-                <input asp-for="CpfCnpj" type="text" class="form-control" placeholder="04656754765" required>
-                <span asp-validation-for="CpfCnpj" class="form-text text-danger"></span>
+                <input asp-for="CpfCnpj" type="text" class="form-control" readonly>
             </div>
             <div class="mb-3">
                 <label asp-for="Name" class="form-label">Nome do cliente</label>
-                <input asp-for="Name" class="form-control" placeholder="Airton Senna" required>
-                <span asp-validation-for="Name" class="form-text text-danger"></span>
+                <input asp-for="Name" class="form-control" readonly>
             </div>
 
             <div class="d-grid gap-2">
-                    <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
-                    <a asp-action="Index" class="btn btn-danger">Voltar</a>
+                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
+                <a asp-action="Index" class="btn btn-danger">Voltar</a>
             </div>
         </form>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
