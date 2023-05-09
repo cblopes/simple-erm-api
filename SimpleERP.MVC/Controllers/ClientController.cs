@@ -20,11 +20,18 @@ namespace SimpleERP.MVC.Controllers
 
             if (id != null)
             {
-                var client = await _clientService.GetClientByIdAsync(id);
+                try
+                {
+                    var client = await _clientService.GetClientByIdAsync(id);
 
-                clients = new List<ClientViewModel> { client };
+                    clients = new List<ClientViewModel> { client };
 
-                return View(clients);
+                    return View(clients);
+                }
+                catch (HttpRequestException ex)
+                {
+                    return View(clients);
+                }
             }
 
             return View(clients);
@@ -47,7 +54,7 @@ namespace SimpleERP.MVC.Controllers
 
                 if (HasErrorsResponse(response.ResponseResult)) return View(input);
 
-                return RedirectToAction("Index", "Client");
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -62,7 +69,6 @@ namespace SimpleERP.MVC.Controllers
             return View(client);
         }
 
-        // POST: ClientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ClientViewModel input)
@@ -77,15 +83,14 @@ namespace SimpleERP.MVC.Controllers
 
                 if (HasErrorsResponse(response.ResponseResult)) return View(input);
 
-                return RedirectToAction("Index", "Client");
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return RedirectToAction("Index", "Client");
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        // GET: ClientController/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -94,7 +99,6 @@ namespace SimpleERP.MVC.Controllers
             return View(client);
         }
 
-        // POST: ClientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, DeleteClientModel input)

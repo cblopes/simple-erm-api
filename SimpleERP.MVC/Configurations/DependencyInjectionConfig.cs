@@ -11,6 +11,8 @@ namespace SimpleERP.MVC.Configurations
 
             services.AddHttpClient<IClientService, ClientService>();
 
+            services.AddHttpClient<IProductService, ProductService>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IUser, AspNetUser>();

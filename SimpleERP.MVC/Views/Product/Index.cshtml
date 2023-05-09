@@ -1,0 +1,81 @@
+﻿@model IEnumerable<SimpleERP.MVC.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Produtos";
+}
+
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Produtos</li>
+    </ol>
+</nav>
+
+<h1>Produtos</h1>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <a asp-action="Create" class="btn btn-outline-primary">Novo Produto</a>
+    </div>
+
+    @using (Html.BeginForm("Index", "Product", FormMethod.Get, new { @class = "col-4 text-end" }))
+    {
+        <div class="input-group">
+            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do produto", @for="productId"})
+            <button class="btn btn-outline-primary" type="submit" id="productId">Pesquisar</button>
+        </div>
+    }
+</div>
+
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantityInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityInStock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <div class="btn-group">
+                    @Html.ActionLink("Alterar", "Edit", "Product", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
+                    @Html.ActionLink("Excluir", "Delete", "Product", new { id = item.Id } , new { @class="btn btn-danger" })
+                </div>  
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
