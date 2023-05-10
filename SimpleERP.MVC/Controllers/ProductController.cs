@@ -65,44 +65,76 @@ namespace SimpleERP.MVC.Controllers
         }
 
         // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            return View();
+            var product = await _productService.GetProductByIdAsync(id);
+
+            return View(product);
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, ProductViewModel input)
         {
             try
             {
+                ModelState.Remove("Id");
+                ModelState.Remove("Code");
+
+                AlterProductModel product = new AlterProductModel { 
+                    Description = input.Description, 
+                    QuantityInStock = input.QuantityInStock,
+                    Price = input.Price
+                };
+
+                var response = await _productService.AlterProductAsync(id, product);
+
+                if (HasErrorsResponse(response.ResponseResult)) return View(input);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 
         // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return View();
+            var response = await _productService.GetProductByIdAsync(id);
+
+            var product = new DeleteProductModel
+            {
+                Id = response.Id,
+                Code = response.Code,
+                Description = response.Description,
+                QuantityInStock = response.QuantityInStock,
+                Price = response.Price
+            };
+
+            return View(product);
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(Guid id, DeleteProductModel input)
         {
             try
             {
+                ModelState.Remove("ResponseResult");
+
+                var response = await _productService.DeleteProductAsync(id);
+
+                if (HasErrorsResponse(response.ResponseResult)) return View(response);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
     }

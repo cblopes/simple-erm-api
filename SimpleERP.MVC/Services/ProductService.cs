@@ -45,12 +45,7 @@ namespace SimpleERP.MVC.Services
                 return product;
             }
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new AuthenticationException("JWT token inválido");
-            }
-
-            throw new HttpRequestException($"Falha ao tentar obter o ID {id}. Código de resposta: {response.StatusCode}");
+            return new ProductViewModel();
         }
 
         public async Task<CreateProductModel> CreateProductAsync(CreateProductModel model)
@@ -58,20 +53,48 @@ namespace SimpleERP.MVC.Services
             var modelContent = GetContent(model);
 
             var response = await _httpClient.PostAsync("/api/v1/products", modelContent);
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            if (!HandleResponseErros(response))
             {
-                return await DeserializeObjectResponse<CreateProductModel>(response);
-            }
-            else
-            {
-                var errorResponse = await DeserializeObjectResponse<ResponseResult>(response);
                 return new CreateProductModel
                 {
-                    ResponseResult = errorResponse
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
                 };
             }
+
+            return await DeserializeObjectResponse<CreateProductModel>(response);
+        }
+
+        public async Task<AlterProductModel> AlterProductAsync(Guid id, AlterProductModel model)
+        {
+            var modelContent = GetContent(model);
+
+            var response = await _httpClient.PutAsync($"/api/v1/products/{id}", modelContent);
+
+            if (!HandleResponseErros(response))
+            {
+                return new AlterProductModel
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                };
+            }
+
+            return await DeserializeObjectResponse<AlterProductModel>(response);
+        }
+
+        public async Task<DeleteProductModel> DeleteProductAsync(Guid id)
+        {
+
+            var response = await _httpClient.DeleteAsync($"/api/v1/products/{id}");
+
+            if (!HandleResponseErros(response))
+            {
+                return new DeleteProductModel
+                {
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
+                };
+            }
+
+            return await DeserializeObjectResponse<DeleteProductModel>(response);
         }
     }
 }

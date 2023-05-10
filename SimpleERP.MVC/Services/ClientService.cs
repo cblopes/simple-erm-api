@@ -31,7 +31,7 @@ namespace SimpleERP.MVC.Services
                 var clients = await DeserializeObjectResponse<IEnumerable<ClientViewModel>>(response);
                 return clients;
             }
-            
+
             return Enumerable.Empty<ClientViewModel>();
         }
 
@@ -45,12 +45,7 @@ namespace SimpleERP.MVC.Services
                 return client;
             }
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new AuthenticationException("JWT token inválido");
-            }
-
-            throw new HttpRequestException($"Falha ao tentar obter o ID {id}. Código de resposta: {response.StatusCode}");
+            return new ClientViewModel();
         }
 
         public async Task<CreateClientModel> CreateClientAsync(CreateClientModel model)
@@ -58,20 +53,15 @@ namespace SimpleERP.MVC.Services
             var modelContent = GetContent(model);
 
             var response = await _httpClient.PostAsync("/api/v1/clients", modelContent);
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            if (!HandleResponseErros(response))
             {
-                return await DeserializeObjectResponse<CreateClientModel>(response);
-            }
-            else
-            {
-                var errorResponse = await DeserializeObjectResponse<ResponseResult>(response);
                 return new CreateClientModel
                 {
-                    ResponseResult = errorResponse
+                    ResponseResult = await DeserializeObjectResponse<ResponseResult>(response)
                 };
             }
+
+            return await DeserializeObjectResponse<CreateClientModel>(response);
         }
 
         public async Task<AlterClientModel> AlterClientAsync(Guid id, AlterClientModel model)

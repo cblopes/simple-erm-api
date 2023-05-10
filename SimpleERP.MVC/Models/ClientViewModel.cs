@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleERP.MVC.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleERP.MVC.Models
 {
@@ -23,6 +24,7 @@ namespace SimpleERP.MVC.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [StringLength(14, MinimumLength = 11, ErrorMessage = "O campo {0} deve conter no mínimo {2} e no máximo {1} digitos.")]
         [Display(Name = "CPF/CNPJ")]
+        [CpfValidation(ErrorMessage = "CPF inválido")]
         public string CpfCnpj { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]

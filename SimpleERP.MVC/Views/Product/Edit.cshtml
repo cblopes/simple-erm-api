@@ -1,0 +1,60 @@
+﻿@model SimpleERP.MVC.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Alterar Produto";
+}
+
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Index">Produtos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Alterar Produto</li>
+    </ol>
+</nav>
+
+<h1>Alterar Produto</h1>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <vc:summary></vc:summary>
+
+            <br />
+
+            <div class="mb-3">
+                <label asp-for="Id" class="form-label"></label>
+                <input asp-for="Id" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Code" class="form-label"></label>
+                <input asp-for="Code" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <input asp-for="Description" class="form-control" placeholder="Capinha de Iphone"/>
+                <span asp-validation-for="Description" class="form-text text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="QuantityInStock" class="form-label"></label>
+                <input asp-for="QuantityInStock" class="form-control" placeholder="15"/>
+                <span asp-validation-for="QuantityInStock" class="form-text text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" placeholder="29,99" type="number" step="any" lang="pt-BR" name="price" id="Price" />
+                <span asp-validation-for="Price" class="form-text text-danger"></span>
+            </div>
+
+            <div class="d-grid gap-2">
+                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
+                <a asp-action="Index" class="btn btn-danger">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
