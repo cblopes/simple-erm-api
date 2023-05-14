@@ -1,6 +1,8 @@
 ﻿@using SimpleERP.MVC.Extensions;
+@using Microsoft.Extensions.Options;
 @model SimpleERP.MVC.Models.EditOrder
 @inject IUser AppUser
+@inject IOptions<AppSettings> settings
 
 @{
     ViewData["Title"] = "Ver/Alterar Venda";
@@ -15,7 +17,7 @@
     </ol>
 </nav>
 
-<h1>Ver/Alterar Venda</h1>
+<h1>Detalhar/Alterar Venda</h1>
 <hr />
 
 <table class="table">
@@ -69,7 +71,36 @@
 
 <div class="row">
     <div class="col">
-        <a asp-action="AddItem" class="btn btn-outline-primary">Novo Item</a>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createItemModal">
+            Novo Item
+        </button>
+
+        <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="createItemModal.Id-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createItemModal-label">Adicionar Item ao Pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createItemForm">
+                            <div class="mb-3">
+                                <label for="createItemProductId" class="form-label">Id do Produto:</label>
+                                <input type="text" class="form-control" id="createItemProductId" name="productId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createItemQuantity" class="form-label">Quantidade:</label>
+                                <input type="number" class="form-control" id="createItemQuantity" name="quantity" value="0">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -100,7 +131,9 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#alterItemModal-@item.Id">
                             Alterar
                         </button>
-                        @Html.ActionLink("Excluir", "RemoveItem", "Order", new { id = item.Id } , new { @class="btn btn-danger" })
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeItemModal-@item.Id">
+                            Excluir
+                        </button>
                     </div> 
                 </td>
             </tr>
@@ -114,8 +147,8 @@
                         </div>
                         <div class="modal-body">
                             <form id="alterItemForm-@item.Id">
-                                <div class="form-group">
-                                    <label for="quantity-@item.Id">Quantidade:</label>
+                                <div class="mb-3">
+                                    <label for="quantity-@item.Id" class="form-label">Quantidade:</label>
                                     <input type="number" class="form-control" id="quantity-@item.Id" name="quantity" value="@item.Quantity">
                                 </div>
                             </form>
@@ -128,12 +161,100 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="removeItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="removeItemModal-@item.Id-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteItemModal-@item.Id-label">Remover Item do Pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja remover este item?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="removeItem('@item.OrderId','@item.Id')">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     </tbody>
 </table>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        let baseUri = "@settings.Value.ApiUrl";
+        let token = "@AppUser.GetUserToken()";
+
+        function alterItem(orderId, itemId) {
+            var quantity = $("#quantity-" + itemId).val();
+
+            $.ajax({
+                url: baseUri + "/api/v1/orders/" + orderId + "/items/" + itemId,
+                type: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify({
+                    quantity: quantity
+                }),
+                success: function () {
+                    alert("Item alterado com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                  console.error(xhr.status + " " + xhr.statusText);
+                  alert("Ocorreu um erro ao tentar alterar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+
+        function createItem(orderId) {
+            let productId = $("#createItemProductId").val();
+            let quantity = $("#createItemQuantity").val();
+
+            $.ajax({
+                url: baseUri + "/api/v1/orders/" + orderId + "/items",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify({
+                    productId: productId,
+                    quantity: quantity
+                }),
+                success: function () {
+                    alert("Item criado com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error(xhr.status + " " + xhr.statusText);
+                    alert("Ocorreu um erro ao tentar alterar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+
+        function removeItem(orderId, itemId) {
+            $.ajax({
+                url: baseUri + "/api/v1/orders/" + orderId + "/items/" + itemId,
+                type: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify(),
+                success: function () {
+                    alert("Item removido com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                  console.error(xhr.status + " " + xhr.statusText);
+                  alert("Ocorreu um erro ao tentar alterar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+    </script>
 }

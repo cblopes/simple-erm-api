@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<SimpleERP.MVC.Models.OrderViewModel>
+@using SimpleERP.MVC.Extensions;
+@using Microsoft.Extensions.Options;
+@inject IUser AppUser
+@inject IOptions<AppSettings> settings
 
 @{
     ViewData["Title"] = "Pedidos";
@@ -8,22 +12,48 @@
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Vendas</li>
+        <li class="breadcrumb-item active" aria-current="page">Pedidos</li>
     </ol>
 </nav>
 
-<h1>Vendas</h1>
+<h1>Pedidos</h1>
 <hr />
 
 <div class="row">
     <div class="col">
-        <a asp-action="Create" class="btn btn-outline-primary">Nova Venda</a>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createOrderModal">
+            Novo pedido
+        </button>
+
+        <div class="modal fade" id="createOrderModal" tabindex="-1" role="dialog" aria-labelledby="createOrderModal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createOrderModal-label">Cadastrar Nova Venda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createOrderForm" class="needs-validation">
+                            <div class="mb-3">
+                            <label for="createOrderClientId" class="form-label">Id do Cliente:</label>
+                            <input type="text" class="form-control inputGuid" id="createOrderClientId" name="clientId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a" required>
+                            <span class="invalid-feedback" ></span>
+                        </div>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="createOrder()">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     @using (Html.BeginForm("Index", "Order", FormMethod.Get, new { @class = "col-4 text-end" }))
     {
         <div class="input-group">
-            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id da venda", @for="orderId"})
+            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do pedido", @for="orderId"})
             <button class="btn btn-outline-primary" type="submit" id="orderId">Pesquisar</button>
         </div>
     }
@@ -77,13 +107,125 @@
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
-                <div class="btn-group">
-                    @Html.ActionLink("Finalizar", "Finish", "Order", new { id = item.Id }, new { @class="btn btn-outline-success" })
-                    @Html.ActionLink("Alterar", "Edit", "Order", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
-                    @Html.ActionLink("Cancelar", "Cancel", "Order", new { id = item.Id } , new { @class="btn btn-danger" })
-                </div> 
+                <div class="dropdown">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Ações
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#finishOrderModal-@item.Id">Finalizar Pedido</a></li>
+                        <li>@Html.ActionLink("Detalhar/Alterar", "Edit", "Order", new { id = item.Id }, new { @class="dropdown-item" })</li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelOrderModal-@item.Id">Cancelar Pedido</a></li>
+                    </ul>
+                </div>
             </td>
         </tr>
+
+        <div class="modal fade" id="finishOrderModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="finishOrderModal-@item.Id-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="finishOrderModal-@item.Id-label">Finalizar Pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>O pedido será finalizado. Deseja continuar?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="finishOrder('@item.Id')">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="cancelOrderModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModal-@item.Id-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelOrderModal-@item.Id-label">Cancelar Pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>O pedido será cancelado. Deseja continuar?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="cancelOrder('@item.Id')">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        let baseUri = "@settings.Value.ApiUrl";
+        let token = "@AppUser.GetUserToken()";
+
+        function createOrder() {
+            let clientId = $("#createOrderClientId").val();
+
+            $.ajax({
+                url: baseUri + "/api/v1/orders/",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify({
+                    clientId: clientId
+                }),
+                success: function () {
+                    alert("Pedido criado com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error(xhr.status + " " + xhr.statusText);
+                    alert("Ocorreu um erro ao tentar criar o pedido. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+
+        function finishOrder(orderId) {
+            $.ajax({
+                url: baseUri + "/api/v1/orders/" + orderId + "/finish",
+                type: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify(),
+                success: function () {
+                    alert("Pedido finalizado com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error(xhr.status + " " + xhr.statusText);
+                    alert("Ocorreu um erro ao tentar fechar o pedido. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+
+        function cancelOrder(orderId) {
+            $.ajax({
+                url: baseUri + "/api/v1/orders/" + orderId + "/cancel",
+                type: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                data: JSON.stringify(),
+                success: function () {
+                    alert("Pedido cancelado com sucesso!");
+                    location.reload(); // recarrega a página para atualizar a tabela
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error(xhr.status + " " + xhr.statusText);
+                    alert("Ocorreu um erro ao tentar cancelar o pedido. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                }
+            });
+        }
+    </script>
+}
