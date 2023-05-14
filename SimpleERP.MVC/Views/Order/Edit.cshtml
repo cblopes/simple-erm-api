@@ -1,0 +1,139 @@
+﻿@using SimpleERP.MVC.Extensions;
+@model SimpleERP.MVC.Models.EditOrder
+@inject IUser AppUser
+
+@{
+    ViewData["Title"] = "Ver/Alterar Venda";
+}
+
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Order" asp-action="Index">Vendas</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Ver/Alterar Venda</li>
+    </ol>
+</nav>
+
+<h1>Ver/Alterar Venda</h1>
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CreatedIn)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.OrderStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.UpdatedIn)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Value)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr />
+
+<div class="row">
+    <div class="col">
+        <a asp-action="AddItem" class="btn btn-outline-primary">Novo Item</a>
+    </div>
+</div>
+
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Id do produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.ProductId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitaryValue)</td>
+                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#alterItemModal-@item.Id">
+                            Alterar
+                        </button>
+                        @Html.ActionLink("Excluir", "RemoveItem", "Order", new { id = item.Id } , new { @class="btn btn-danger" })
+                    </div> 
+                </td>
+            </tr>
+
+            <div class="modal fade" id="alterItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="alterItemModal-@item.Id-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="alterItemModal-@item.Id-label">Alterar Item do Pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="alterItemForm-@item.Id">
+                                <div class="form-group">
+                                    <label for="quantity-@item.Id">Quantidade:</label>
+                                    <input type="number" class="form-control" id="quantity-@item.Id" name="quantity" value="@item.Quantity">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

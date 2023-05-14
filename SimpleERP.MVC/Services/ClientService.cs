@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SimpleERP.MVC.Extensions;
 using SimpleERP.MVC.Models;
-using System.Net;
-using System.Security.Authentication;
 
 namespace SimpleERP.MVC.Services
 {

@@ -4,38 +4,42 @@
     ViewData["Title"] = "Login de usuário";
 }
 
-<section class="section-conten padding-y container" style="min-height:35vh">
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Login</li>
+    </ol>
+</nav>
 
-    <div class="card mx-auto" style="max-width: 380px; margin-top: 100px;">
+<h1>Autentique-se</h1>
+<hr />
 
-        <div class="card-body">
-            <h4 class="card-title mb-4">Seja bem vindo!</h4>
-            <vc:Summary></vc:Summary>
+<div class="row justify-content-center">
+    <div class="col-md-4">        
+        <vc:summary></vc:summary>
 
-            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+          <br />
 
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" asp-for="Email">
-                    <label asp-for="Email" for="floatingEmail">E-mail</label>
-                    <span asp-validation-for="Email" for="floatingEmail" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
+                <span asp-validation-for="Email" class="form-text text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control">
+                <span asp-validation-for="Password" class="form-text text-danger"></span>
+            </div>
 
-
-                <div class="form-floating mb-3">
-                    <input type="password" asp-for="Password" class="form-control" id="floatingPass" placeholder="Password"/>
-                    <label asp-for="Password" for="floatingPass">Senha</label>
-                    <span asp-validation-for="Password" for="floatingPass" class="text-danger"></span>
-                </div>
-
-                <div>
-                    <button type="submit" class="btn btn-outline-primary btn-block">Entrar</button>
-                </div>
-            </form>
-        </div>        
+            <div class="d-grid gap-2">
+                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
+                <a asp-action="Index" asp-controller="Home" class="btn btn-danger">Voltar</a>
+            </div>
+        </form>
     </div>
-
-</section>
-
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

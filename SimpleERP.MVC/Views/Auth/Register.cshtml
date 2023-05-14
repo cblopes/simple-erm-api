@@ -4,43 +4,47 @@
     ViewData["Title"] = "Cadastrar Usuário";
 }
 
-<section class="section-conten padding-y container" style="min-height: 35vh">
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Crie sua conta</li>
+    </ol>
+</nav>
 
-    <vc:Summary></vc:Summary>
+<h1>Registre-se</h1>
+<hr />
 
-    <div class="card mx-auto" style="max-width: 380px; margin-top: 100px;">
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <vc:summary></vc:summary>
 
-        <div class="card-body">
-            <h4 class="card-title mb-4">Seja bem vindo!</h4>
+        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <br />
 
-            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
+                <span asp-validation-for="Email" class="form-text text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control">
+                <span asp-validation-for="Password" class="form-text text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label">Confirme sua senha</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control">
+                <span asp-validation-for="ConfirmPassword" class="form-text text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input type="password" asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="ConfirmPassword"></label>
-                    <input type="password" asp-for="ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Registrar</button>
-                </div>
-            </form>
-        </div>
+            <div class="d-grid gap-2">
+                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
+                <a asp-action="Index" asp-controller="Home" class="btn btn-danger">Voltar</a>
+            </div>
+        </form>
     </div>
-
-</section>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

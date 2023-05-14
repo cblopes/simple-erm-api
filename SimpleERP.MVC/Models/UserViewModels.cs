@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleERP.MVC.Models
 {
@@ -6,13 +7,16 @@ namespace SimpleERP.MVC.Models
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [EmailAddress(ErrorMessage = "Digite um e-mail válido.")]
+        [DisplayName("E-mail")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [StringLength(32, ErrorMessage = "O campor {0} deve conter entre {2} e {1} caracteres.", MinimumLength = 8)]
+        [DisplayName("Senha")]
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "As senhas não conferem.")]
+        [DisplayName("Confirmar senha")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -20,10 +24,12 @@ namespace SimpleERP.MVC.Models
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [EmailAddress(ErrorMessage = "Digite um e-mail válido.")]
+        [DisplayName("E-mail")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         [StringLength(32, ErrorMessage = "O campor {0} deve conter entre {2} e {1} caracteres.")]
+        [DisplayName("Senha")]
         public string Password { get; set; }
     }
 

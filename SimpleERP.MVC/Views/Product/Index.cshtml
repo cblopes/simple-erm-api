@@ -1,4 +1,6 @@
-﻿@model IEnumerable<SimpleERP.MVC.Models.ProductViewModel>
+﻿@using SimpleERP.MVC.Extensions;
+@model IEnumerable<SimpleERP.MVC.Models.ProductViewModel>
+@inject IUser AppUser
 
 @{
     ViewData["Title"] = "Produtos";

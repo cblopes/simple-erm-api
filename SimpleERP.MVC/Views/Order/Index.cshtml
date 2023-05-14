@@ -1,0 +1,89 @@
+﻿@model IEnumerable<SimpleERP.MVC.Models.OrderViewModel>
+
+@{
+    ViewData["Title"] = "Pedidos";
+}
+
+<br />
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Vendas</li>
+    </ol>
+</nav>
+
+<h1>Vendas</h1>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <a asp-action="Create" class="btn btn-outline-primary">Nova Venda</a>
+    </div>
+
+    @using (Html.BeginForm("Index", "Order", FormMethod.Get, new { @class = "col-4 text-end" }))
+    {
+        <div class="input-group">
+            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id da venda", @for="orderId"})
+            <button class="btn btn-outline-primary" type="submit" id="orderId">Pesquisar</button>
+        </div>
+    }
+</div>
+
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedIn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedIn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                <div class="btn-group">
+                    @Html.ActionLink("Finalizar", "Finish", "Order", new { id = item.Id }, new { @class="btn btn-outline-success" })
+                    @Html.ActionLink("Alterar", "Edit", "Order", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
+                    @Html.ActionLink("Cancelar", "Cancel", "Order", new { id = item.Id } , new { @class="btn btn-danger" })
+                </div> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

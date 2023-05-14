@@ -1,4 +1,6 @@
-﻿@model IEnumerable<SimpleERP.MVC.Models.ClientViewModel>
+﻿@using SimpleERP.MVC.Extensions;
+@model IEnumerable<SimpleERP.MVC.Models.ClientViewModel>
+@inject IUser AppUser
 
 @{
     ViewData["Title"] = "Clientes";
@@ -30,40 +32,51 @@
 </div>
 
 <br />
-<table class="table table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CpfCnpj)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CpfCnpj)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <div class="btn-group">
-                    @Html.ActionLink("Alterar", "Edit", "Client", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
-                    @Html.ActionLink("Excluir", "Delete", "Client", new { id = item.Id } , new { @class="btn btn-danger" })
-                </div>                
-            </td>
-        </tr>
+
+@if (Model != null)
+{
+    <table class="table table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CpfCnpj)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CpfCnpj)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            @Html.ActionLink("Alterar", "Edit", "Client", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
+                            @Html.ActionLink("Excluir", "Delete", "Client", new { id = item.Id } , new { @class="btn btn-danger" })
+                        </div>                
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="container justify-content-center">
+        <h3>Nenhum cliente cadastrado.</h3>
+    </div>
+}
