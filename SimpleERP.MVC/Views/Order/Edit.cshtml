@@ -83,20 +83,21 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="createItemForm">
+                        <form id="createItemForm" class="needs-validation was-validated">
                             <div class="mb-3">
                                 <label for="createItemProductId" class="form-label">Id do Produto:</label>
-                                <input type="text" class="form-control" id="createItemProductId" name="productId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a">
+                                <input type="text" class="form-control" id="createItemProductId" name="productId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a"
+                                       pattern="^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$" required>
                             </div>
                             <div class="mb-3">
                                 <label for="createItemQuantity" class="form-label">Quantidade:</label>
-                                <input type="number" class="form-control" id="createItemQuantity" name="quantity" value="0">
+                                <input type="number" class="form-control" min="0" pattern="\d+" id="createItemQuantity" name="quantity" required>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
+                        <button for="#createItemForm" type="submit" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
                     </div>
                 </div>
             </div>
@@ -106,7 +107,7 @@
 
 <br />
 
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>Id</th>
@@ -146,16 +147,16 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="alterItemForm-@item.Id">
+                            <form id="alterItemForm-@item.Id" class="needs-validation was-validated">
                                 <div class="mb-3">
                                     <label for="quantity-@item.Id" class="form-label">Quantidade:</label>
-                                    <input type="number" class="form-control" id="quantity-@item.Id" name="quantity" value="@item.Quantity">
+                                    <input type="number" class="form-control" min="0" pattern="\d+" id="quantity-@item.Id" value="@item.Quantity" required>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
+                            <button for="#alterItemForm-@item.Id" type="submit" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
                         </div>
                     </div>
                 </div>
@@ -183,7 +184,10 @@
 </table>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
     <script>
+
         let baseUri = "@settings.Value.ApiUrl";
         let token = "@AppUser.GetUserToken()";
 

@@ -33,35 +33,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="createOrderForm" class="needs-validation">
-                            <div class="mb-3">
+                    <form id="createOrderForm" class="needs-validation was-validated">
+                        <div class="mb-3">
                             <label for="createOrderClientId" class="form-label">Id do Cliente:</label>
-                            <input type="text" class="form-control inputGuid" id="createOrderClientId" name="clientId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a" required>
-                            <span class="invalid-feedback" ></span>
+                            <input type="text" class="form-control" id="createOrderClientId" 
+                                   pattern="^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a" required>
+                            <div class="invalid-feedback">Você deve informar um Guid válido.</div>
                         </div>
                     </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" onclick="createOrder()">Confirmar</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" onclick="createOrder()">Confirmar</button>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-
-    @using (Html.BeginForm("Index", "Order", FormMethod.Get, new { @class = "col-4 text-end" }))
-    {
-        <div class="input-group">
-            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do pedido", @for="orderId"})
-            <button class="btn btn-outline-primary" type="submit" id="orderId">Pesquisar</button>
-        </div>
-    }
 </div>
 
 <br />
 
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>
@@ -160,6 +153,10 @@
 </table>
 
 @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
         let baseUri = "@settings.Value.ApiUrl";
         let token = "@AppUser.GetUserToken()";
@@ -179,7 +176,7 @@
                 }),
                 success: function () {
                     alert("Pedido criado com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error(xhr.status + " " + xhr.statusText);
@@ -199,7 +196,7 @@
                 data: JSON.stringify(),
                 success: function () {
                     alert("Pedido finalizado com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error(xhr.status + " " + xhr.statusText);
@@ -219,7 +216,7 @@
                 data: JSON.stringify(),
                 success: function () {
                     alert("Pedido cancelado com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error(xhr.status + " " + xhr.statusText);
