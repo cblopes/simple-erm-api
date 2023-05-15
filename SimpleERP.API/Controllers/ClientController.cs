@@ -46,18 +46,18 @@ namespace SimpleERP.API.Controllers
         /// <summary>
         /// Obter um cliente por Id
         /// </summary>
-        /// <param name="id">Identificador do cliente</param>
+        /// <param name="document">Identificador do cliente</param>
         /// <returns>Informações de um cliente</returns>
         /// <response code="200">Sucesso</response>
         /// <response code="400">Má requisição</response>
-        [HttpGet("{id}")]
+        [HttpGet("{document}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetByDocument(string document)
         {
             try
             {
-                var client = await _clientServices.GetClientByIdAsync(id);
+                var client = await _clientServices.GetClientByDocumentAsync(document);
 
                 var clientViewModel = _mapper.Map<ClientViewModel>(client);
 
@@ -92,7 +92,7 @@ namespace SimpleERP.API.Controllers
 
                 var clientViewModel = _mapper.Map<ClientViewModel>(client);
 
-                return CreatedAtAction(nameof(GetById), new { id = clientViewModel.Id }, clientViewModel);
+                return CreatedAtAction(nameof(GetByDocument), new { document = clientViewModel.CpfCnpj }, clientViewModel);
             }
             catch (Exception ex)
             {

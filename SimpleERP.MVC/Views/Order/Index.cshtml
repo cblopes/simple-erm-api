@@ -35,10 +35,10 @@
                 <div class="modal-body">
                     <form id="createOrderForm" class="needs-validation was-validated">
                         <div class="mb-3">
-                            <label for="createOrderClientId" class="form-label">Id do Cliente:</label>
-                            <input type="text" class="form-control" id="createOrderClientId" 
-                                   pattern="^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a" required>
-                            <div class="invalid-feedback">Você deve informar um Guid válido.</div>
+                            <label for="createOrderClientId" class="form-label">CPF/CNPJ do Cliente:</label>
+                            <input type="text" class="form-control" id="createOrderClientId"
+                                   pattern="^\d{11,14}$" placeholder="58267272259" required>
+                            <div class="invalid-feedback">Você deve informar um CPF/CNPJ válido.</div>
                         </div>
                     </form>
                 </div>
@@ -162,18 +162,16 @@
         let token = "@AppUser.GetUserToken()";
 
         function createOrder() {
-            let clientId = $("#createOrderClientId").val();
+            let clientDocument = $("#createOrderClientId").val();
 
             $.ajax({
-                url: baseUri + "/api/v1/orders/",
+                url: baseUri + "/api/v1/orders/" + clientDocument,
                 type: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + token
                 },
-                data: JSON.stringify({
-                    clientId: clientId
-                }),
+                data: JSON.stringify(),
                 success: function () {
                     alert("Pedido criado com sucesso!");
                     location.reload();

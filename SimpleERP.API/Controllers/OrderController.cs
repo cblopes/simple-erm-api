@@ -12,11 +12,13 @@ namespace SimpleERP.API.Controllers
     public class OrderController : MainController
     {
         private readonly IMapper _mapper;
+        private readonly IClientServices _clientServices;
         private readonly IOrderServices _orderServices;
 
-        public OrderController(IMapper mapper, IOrderServices orderServices)
+        public OrderController(IMapper mapper, IOrderServices orderServices, IClientServices clientServices)
         {
             _mapper = mapper;
+            _clientServices = clientServices;
             _orderServices = orderServices;
         }
 
@@ -75,20 +77,24 @@ namespace SimpleERP.API.Controllers
         /// <summary>
         /// Abrir um pedido
         /// </summary>
-        /// <param name="input">Identificador do cliente</param>
+        /// <param name="input">CPF/CNPJ do cliente</param>
         /// <returns>Pedido criado</returns>
         /// <reponse code="201">Sucesso</reponse>
         /// <reponse code="400">Má requisição</reponse>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateOrder(CreateOrderModel input)
+        public async Task<IActionResult> CreateOrder(string input)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var order = _mapper.Map<Order>(input);
+                var client = await _clientServices.GetClientByDocumentAsync(input);
+
+                Guid clientId = client.Id;
+
+                var order = new Order { ClientId = clientId };
 
                 await _orderServices.CreateOrderAsync(order);
 

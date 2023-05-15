@@ -30,6 +30,15 @@ namespace SimpleERP.API.Services
             return client;
         }
 
+        public async Task<Client> GetClientByDocumentAsync(string document)
+        {
+            var client = await _clientRepository.GetByCpfCnpjAsync(document);
+
+            if (client == null || !client.IsActive) throw new Exception("Cliente não encontrado.");
+
+            return client;
+        }
+
         public async Task CreateClientAsync(Client input)
         {
             var document = input.CpfCnpj.Replace(".", "").Replace("-", "").Replace("/", "");

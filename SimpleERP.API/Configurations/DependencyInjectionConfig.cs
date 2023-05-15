@@ -28,8 +28,6 @@ namespace SimpleERP.API.Configurations
             services.AddTransient<IValidator<CreateProductModel>, CreateProductValidator>();
             services.AddTransient<IValidator<AlterProductModel>, AlterProductValidator>();
 
-            services.AddTransient<IValidator<CreateOrderModel>, CreateOrderValidator>();
-
             return services;
         }
     }

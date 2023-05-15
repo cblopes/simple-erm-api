@@ -33,9 +33,9 @@ namespace SimpleERP.MVC.Services
             return Enumerable.Empty<ClientViewModel>();
         }
 
-        public async Task<ClientViewModel> GetClientByIdAsync(Guid? id)
+        public async Task<ClientViewModel> GetClientByDocumentAsync(string document)
         {
-            var response = await _httpClient.GetAsync($"/api/v1/clients/{id}");
+            var response = await _httpClient.GetAsync($"/api/v1/clients/{document}");
 
             if (response.IsSuccessStatusCode)
             {

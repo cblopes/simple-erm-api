@@ -6,6 +6,7 @@ namespace SimpleERP.API.Interfaces
     {
         Task<IEnumerable<Client>> GetAllClientsAsync();
         Task<Client> GetClientByIdAsync(Guid id);
+        Task<Client> GetClientByDocumentAsync(string document);
         Task CreateClientAsync(Client client);
         Task UpdateClientAsync(Guid id, Client client);
         Task RemoveClientAsync(Guid id);

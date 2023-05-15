@@ -14,15 +14,15 @@ namespace SimpleERP.MVC.Controllers
             _clientService = clientService;
         }
 
-        public async Task<IActionResult> Index(Guid? id)
+        public async Task<IActionResult> Index(string? document)
         {
             var clients = await _clientService.GetClientsAsync();
 
-            if (id != null)
+            if (document != null)
             {
                 try
                 {
-                    var client = await _clientService.GetClientByIdAsync(id);
+                    var client = await _clientService.GetClientByDocumentAsync(document);
 
                     clients = new List<ClientViewModel> { client };
 
@@ -62,9 +62,9 @@ namespace SimpleERP.MVC.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(string document)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientService.GetClientByDocumentAsync(document);
 
             return View(client);
         }
@@ -92,9 +92,9 @@ namespace SimpleERP.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string document)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientService.GetClientByDocumentAsync(document);
 
             return View(client);
         }

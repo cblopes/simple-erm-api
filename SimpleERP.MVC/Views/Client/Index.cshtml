@@ -25,7 +25,7 @@
     @using (Html.BeginForm("Index", "Client", FormMethod.Get, new { @class = "col-4 text-end" }))
     {
         <div class="input-group">
-            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do cliente", @for="clientId"})
+            @Html.TextBox("document", null, new { @class = "form-control", @placeholder="CPF/CNPJ do cliente", @for="clientId"})
             <button class="btn btn-outline-primary" type="submit" id="clientId">Pesquisar</button>
         </div>
     }
@@ -65,8 +65,8 @@
                     </td>
                     <td>
                         <div class="btn-group">
-                            @Html.ActionLink("Alterar", "Edit", "Client", new { id = item.Id }, new { @class="btn btn-outline-secondary" })
-                            @Html.ActionLink("Excluir", "Delete", "Client", new { id = item.Id } , new { @class="btn btn-danger" })
+                            @Html.ActionLink("Alterar", "Edit", "Client", new { document = item.CpfCnpj }, new { @class="btn btn-outline-secondary" })
+                            @Html.ActionLink("Excluir", "Delete", "Client", new { document = item.CpfCnpj } , new { @class="btn btn-danger" })
                         </div>                
                     </td>
                 </tr>
