@@ -113,6 +113,8 @@ namespace SimpleERP.API.Services
 
             if (item != null) throw new Exception("O item já foi adicionado anteriormente. Tente alterá-lo.");
 
+            if (input.Quantity < 0) throw new Exception("Informe uma quantidade válida.");
+
             if (input.Quantity > product.QuantityInStock) throw new Exception("Quantidade informada é superior a quantidade em estoque.");
 
             input.OrderId = orderId;
@@ -143,6 +145,8 @@ namespace SimpleERP.API.Services
             var item = await _orderItemRepository.GetByIdAsync(itemId);
 
             if (item == null) throw new Exception("Item não encontrado no pedido informado.");
+
+            if (input.Quantity < 0) throw new Exception("Informe uma quantidade válida..");
 
             int newQuantity = input.Quantity;
 

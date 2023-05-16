@@ -26,7 +26,7 @@ namespace SimpleERP.API.Data.Repositories
 
         public async Task<Product> GetByCodeAsync(string code)
         {
-            return await _context.Products.SingleOrDefaultAsync(p => p.Code == code);
+            return await _context.Products.SingleOrDefaultAsync(p => p.Code == code && !p.IsDeleted);
         }
 
         public async Task CreateAsync(Product product)

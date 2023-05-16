@@ -25,8 +25,8 @@
     @using (Html.BeginForm("Index", "Product", FormMethod.Get, new { @class = "col-4 text-end" }))
     {
         <div class="input-group">
-            @Html.TextBox("id", null, new { @class = "form-control", @placeholder="Id do produto", @for="productId"})
-            <button class="btn btn-outline-primary" type="submit" id="productId">Pesquisar</button>
+            @Html.TextBox("code", null, new { @class = "form-control", @placeholder="Código do produto", @for="productCode"})
+            <button class="btn btn-outline-primary" type="submit" id="productCode">Pesquisar</button>
         </div>
     }
 </div>

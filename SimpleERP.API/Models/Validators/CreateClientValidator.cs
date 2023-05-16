@@ -101,14 +101,64 @@ namespace SimpleERP.API.Models.Validators
 
         private bool IsCnpjValid(string cnpj)
         {
-            cnpj = cnpj.Replace(".", "").Replace("-", "").Replace("/", "");
-
-            if (!IsOnlyNumbers(cnpj))
+            if (string.IsNullOrEmpty(cnpj))
             {
                 return false;
             }
 
-            return true;
+            cnpj = cnpj.Trim().Replace(".", "").Replace("/", "").Replace("-", "");
+
+            if (cnpj.Length != 14)
+            {
+                return false;
+            }
+
+            int[] digits = new int[14];
+
+            for (int i = 0; i < 14; i++)
+            {
+                if (!int.TryParse(cnpj[i].ToString(), out digits[i]))
+                {
+                    return false;
+                }
+            }
+
+            int[] multipliers1 = new int[] { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] multipliers2 = new int[] { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+
+            int sum1 = 0;
+            int sum2 = 0;
+
+            for (int i = 0; i < 12; i++)
+            {
+                sum1 += digits[i] * multipliers1[i];
+                sum2 += digits[i] * multipliers2[i];
+            }
+
+            sum2 += digits[12] * multipliers2[12];
+
+            int mod1 = sum1 % 11;
+            int mod2 = sum2 % 11;
+
+            if (mod1 < 2)
+            {
+                mod1 = 0;
+            }
+            else
+            {
+                mod1 = 11 - mod1;
+            }
+
+            if (mod2 < 2)
+            {
+                mod2 = 0;
+            }
+            else
+            {
+                mod2 = 11 - mod2;
+            }
+
+            return (digits[12] == mod1 && digits[13] == mod2);
         }
 
         private bool IsOnlyNumbers(string input)

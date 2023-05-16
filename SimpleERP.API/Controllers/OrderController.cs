@@ -14,12 +14,14 @@ namespace SimpleERP.API.Controllers
         private readonly IMapper _mapper;
         private readonly IClientServices _clientServices;
         private readonly IOrderServices _orderServices;
+        private readonly IProductServices _productServices;
 
-        public OrderController(IMapper mapper, IOrderServices orderServices, IClientServices clientServices)
+        public OrderController(IMapper mapper, IOrderServices orderServices, IClientServices clientServices, IProductServices productServices)
         {
             _mapper = mapper;
             _clientServices = clientServices;
             _orderServices = orderServices;
+            _productServices = productServices;
         }
 
         /// <summary>
@@ -77,20 +79,20 @@ namespace SimpleERP.API.Controllers
         /// <summary>
         /// Abrir um pedido
         /// </summary>
-        /// <param name="input">CPF/CNPJ do cliente</param>
+        /// <param name="document">CPF/CNPJ do cliente</param>
         /// <returns>Pedido criado</returns>
         /// <reponse code="201">Sucesso</reponse>
         /// <reponse code="400">Má requisição</reponse>
-        [HttpPost]
+        [HttpPost("{document}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateOrder(string input)
+        public async Task<IActionResult> CreateOrder(string document)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var client = await _clientServices.GetClientByDocumentAsync(input);
+                var client = await _clientServices.GetClientByDocumentAsync(document);
 
                 Guid clientId = client.Id;
 
@@ -174,7 +176,15 @@ namespace SimpleERP.API.Controllers
         {
             try
             {
-                var item = _mapper.Map<OrderItem>(input);
+                var product = await _productServices.GetProductByCodeAsync(input.Code);
+
+                OrderItem orderItem = new OrderItem 
+                { 
+                    ProductId = product.Id, 
+                    Quantity = input.Quantity 
+                };
+
+                var item = _mapper.Map<OrderItem>(orderItem);
                 await _orderServices.AddItemAsync(orderId, item);
 
                 return NoContent();

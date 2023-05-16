@@ -24,6 +24,8 @@ namespace SimpleERP.MVC.Controllers
                 {
                     var client = await _clientService.GetClientByDocumentAsync(document);
 
+                    if (client.CpfCnpj == null) throw new HttpRequestException("Cliente não encontrado");
+
                     clients = new List<ClientViewModel> { client };
 
                     return View(clients);

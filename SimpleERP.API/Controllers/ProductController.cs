@@ -71,6 +71,33 @@ namespace SimpleERP.API.Controllers
         }
 
         /// <summary>
+        /// Obter um produto por Id
+        /// </summary>
+        /// <param name="code">Identificador do produto</param>
+        /// <returns>Informações de um produto</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="400">Má requisição</response>
+        [HttpGet("{code}/code")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetByCode(string code)
+        {
+            try
+            {
+                var product = await _productService.GetProductByCodeAsync(code);
+
+                var productViewModel = _mapper.Map<ProductViewModel>(product);
+
+                return Ok(productViewModel);
+            }
+            catch (Exception ex)
+            {
+                AddProcessingError(ex.Message);
+                return CustomResponse();
+            }
+        }
+
+        /// <summary>
         /// Cadastrar um produto
         /// </summary>
         /// <param name="model">Dados do produto</param>

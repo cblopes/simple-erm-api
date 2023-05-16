@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleERP.MVC.Models;
 using SimpleERP.MVC.Services;
 
@@ -14,15 +13,17 @@ namespace SimpleERP.MVC.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index(Guid? id)
+        public async Task<IActionResult> Index(string? code)
         {
             var products = await _productService.GetProductsAsync();
 
-            if (id != null)
+            if (code != null)
             {
                 try
                 {
-                    var product = await _productService.GetProductByIdAsync(id);
+                    var product = await _productService.GetProductByCodeAsync(code);
+
+                    if (product.Code == null) throw new HttpRequestException("Produto não encontrado.");
 
                     products = new List<ProductViewModel> { product };
 

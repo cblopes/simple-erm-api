@@ -5,19 +5,19 @@
 @inject IOptions<AppSettings> settings
 
 @{
-    ViewData["Title"] = "Ver/Alterar Venda";
+    ViewData["Title"] = "Detalhar/Alterar Pedido";
 }
 
 <br />
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Order" asp-action="Index">Vendas</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Ver/Alterar Venda</li>
+        <li class="breadcrumb-item"><a asp-controller="Order" asp-action="Index">Pedidos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Ver/Alterar Pedido</li>
     </ol>
 </nav>
 
-<h1>Detalhar/Alterar Venda</h1>
+<h1>Detalhar/Alterar Pedido</h1>
 <hr />
 
 <table class="table">
@@ -85,9 +85,9 @@
                     <div class="modal-body">
                         <form id="createItemForm" class="needs-validation was-validated">
                             <div class="mb-3">
-                                <label for="createItemProductId" class="form-label">Id do Produto:</label>
-                                <input type="text" class="form-control" id="createItemProductId" name="productId" placeholder="c3b79a0a-e5ed-4e7b-a5ce-2485825a0d5a"
-                                       pattern="^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$" required>
+                                <label for="createItemProductCode" class="form-label">Código do Produto:</label>
+                                <input type="text" class="form-control" id="createItemProductCode" name="productCode" placeholder="PROD-00001"
+                                       maxlength="10" required>
                             </div>
                             <div class="mb-3">
                                 <label for="createItemQuantity" class="form-label">Quantidade:</label>
@@ -216,7 +216,7 @@
         }
 
         function createItem(orderId) {
-            let productId = $("#createItemProductId").val();
+            let productCode = $("#createItemProductCode").val();
             let quantity = $("#createItemQuantity").val();
 
             $.ajax({
@@ -227,7 +227,7 @@
                     "Authorization": "Bearer " + token
                 },
                 data: JSON.stringify({
-                    productId: productId,
+                    code: productCode,
                     quantity: quantity
                 }),
                 success: function () {

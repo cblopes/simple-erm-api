@@ -48,6 +48,19 @@ namespace SimpleERP.MVC.Services
             return new ProductViewModel();
         }
 
+        public async Task<ProductViewModel> GetProductByCodeAsync(string? code)
+        {
+            var response = await _httpClient.GetAsync($"/api/v1/products/{code}/code");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var product = await DeserializeObjectResponse<ProductViewModel>(response);
+                return product;
+            }
+
+            return new ProductViewModel();
+        }
+
         public async Task<CreateProductModel> CreateProductAsync(CreateProductModel model)
         {
             var modelContent = GetContent(model);

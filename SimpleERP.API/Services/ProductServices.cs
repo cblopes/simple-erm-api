@@ -29,6 +29,15 @@ namespace SimpleERP.API.Services
             return product;
         }
 
+        public async Task<Product> GetProductByCodeAsync(string code)
+        {
+            var product = await _productRepository.GetByCodeAsync(code);
+
+            if (product == null || product.IsDeleted) throw new Exception("Produto não encontrado.");
+
+            return product;
+        }
+
         public async Task CreateProductAsync(Product input)
         {
             var product = await _productRepository.GetByCodeAsync(input.Code);
