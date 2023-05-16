@@ -38,21 +38,17 @@ namespace SimpleERP.MVC.Controllers
             return View(products);
         }
 
-        // GET: ProductController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateProductModel input)
         {
             try
             {
-                //if (!ModelState.IsValid) return View(input);
-
                 var response = await _productService.CreateProductAsync(input);
 
                 if (HasErrorsResponse(response.ResponseResult)) return View(input);
@@ -65,7 +61,6 @@ namespace SimpleERP.MVC.Controllers
             }
         }
 
-        // GET: ProductController/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _productService.GetProductByIdAsync(id);
@@ -73,7 +68,6 @@ namespace SimpleERP.MVC.Controllers
             return View(product);
         }
 
-        // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel input)
@@ -101,7 +95,6 @@ namespace SimpleERP.MVC.Controllers
             }
         }
 
-        // GET: ProductController/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
             var response = await _productService.GetProductByIdAsync(id);
@@ -118,7 +111,6 @@ namespace SimpleERP.MVC.Controllers
             return View(product);
         }
 
-        // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, DeleteProductModel input)

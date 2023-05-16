@@ -46,6 +46,8 @@ namespace SimpleERP.MVC.Models
     public class DeleteClientModel
     {
         public Guid Id { get; set; }
+        public string CpfCnpj { get; set; }
+        public string Name { get; set; }
         public ResponseResult ResponseResult { get; set; }
     }
 }

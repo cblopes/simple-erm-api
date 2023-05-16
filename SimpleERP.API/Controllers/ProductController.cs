@@ -71,9 +71,9 @@ namespace SimpleERP.API.Controllers
         }
 
         /// <summary>
-        /// Obter um produto por Id
+        /// Obter um produto por código
         /// </summary>
-        /// <param name="code">Identificador do produto</param>
+        /// <param name="code">Código do produto</param>
         /// <returns>Informações de um produto</returns>
         /// <response code="200">Sucesso</response>
         /// <response code="400">Má requisição</response>

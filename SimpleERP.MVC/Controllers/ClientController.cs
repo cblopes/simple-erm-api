@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleERP.MVC.Models;
 using SimpleERP.MVC.Services;
 
@@ -50,8 +49,6 @@ namespace SimpleERP.MVC.Controllers
         {
             try
             {
-                //if (!ModelState.IsValid) return View(input);
-
                 var response = await _clientService.CreateClientAsync(input);
 
                 if (HasErrorsResponse(response.ResponseResult)) return View(input);
@@ -96,7 +93,14 @@ namespace SimpleERP.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string document)
         {
-            var client = await _clientService.GetClientByDocumentAsync(document);
+            var response = await _clientService.GetClientByDocumentAsync(document);
+
+            var client = new DeleteClientModel
+            {
+                Id = response.Id,
+                Name = response.Name,
+                CpfCnpj = response.CpfCnpj
+            };
 
             return View(client);
         }
