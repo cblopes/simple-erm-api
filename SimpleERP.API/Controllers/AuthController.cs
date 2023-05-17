@@ -11,13 +11,13 @@ using System.Security.Claims;
 namespace SimpleERP.API.Controllers
 {
     [Route("api/v1/accounts")]
-    public class AuthController : MainController
+    public class AccountController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, 
+        public AccountController(SignInManager<IdentityUser> signInManager, 
                               UserManager<IdentityUser> userManager,
                               IOptions<AppSettings> appSettings)
         {

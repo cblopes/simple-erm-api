@@ -9,7 +9,7 @@ namespace SimpleERP.MVC.Configurations
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LogoutPath = "/Auth/Login";
+                    options.LogoutPath = "/Account/Login";
                     options.AccessDeniedPath = "/access-denied";
                 });
         }

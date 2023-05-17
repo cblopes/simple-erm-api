@@ -27,7 +27,7 @@ namespace SimpleERP.MVC.Extensions
         {
             if (statusCode == HttpStatusCode.Unauthorized)
             {
-                context.Response.Redirect($"accounts/login?ReturnUrl={context.Request.Path}");
+                context.Response.Redirect($"Account/Login?ReturnUrl={context.Request.Path}");
                 return;
             }
 

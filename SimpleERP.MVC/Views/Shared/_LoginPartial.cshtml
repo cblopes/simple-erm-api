@@ -4,10 +4,10 @@
 @if (AppUser.IsAuthenticated())
 {
     <span class="me-2" title="Manage">Olá, @AppUser.GetUserEmail()!</span>
-    <a class="btn btn-secondary" asp-controller="Auth" asp-action="Logout">Sair</a>
+    <a class="btn btn-secondary" asp-controller="Account" asp-action="Logout">Sair</a>
 }
 else
 {
-    <a class="btn btn-outline-secondary me-2" asp-controller="Auth" asp-action="Login">Login</a>    
-    <a class="btn btn-success" asp-controller="Auth" asp-action="Register">Criar Conta</a>
+    <a class="btn btn-outline-secondary me-2" asp-controller="Account" asp-action="Login">Login</a>    
+    <a class="btn btn-success" asp-controller="Account" asp-action="Register">Criar Conta</a>
 }

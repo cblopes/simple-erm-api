@@ -8,11 +8,11 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace SimpleERP.MVC.Controllers
 {
-    public class AuthController : MainController
+    public class AccountController : MainController
     {
-        private readonly IAuthService _authService;
+        private readonly IAccountService _authService;
 
-        public AuthController(IAuthService authService)
+        public AccountController(IAccountService authService)
         {
             _authService = authService;
         }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SimpleERP.MVC.Models;
 using SimpleERP.MVC.Services;
 
 namespace SimpleERP.MVC.Controllers
 {
+    [Authorize]
     public class ClientController : MainController
     {
         private readonly IClientService _clientService;

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SimpleERP.MVC.Services;
 
 namespace SimpleERP.MVC.Controllers
 {
+    [Authorize]
     public class OrderController : MainController
     {
         private readonly IOrderService _orderService;

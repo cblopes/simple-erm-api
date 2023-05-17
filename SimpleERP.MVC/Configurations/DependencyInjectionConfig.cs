@@ -7,7 +7,7 @@ namespace SimpleERP.MVC.Configurations
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddHttpClient<IAuthService, AuthService>();
+            services.AddHttpClient<IAccountService, AccountService>();
 
             services.AddHttpClient<IClientService, ClientService>();
 

@@ -9,12 +9,12 @@ using SimpleERP.MVC.Extensions;
 
 namespace SimpleERP.MVC.Services
 {
-    public class AuthService : Service, IAuthService
+    public class AccountService : Service, IAccountService
     {
         private readonly HttpClient _httpClient;
         private readonly AppSettings _settings;
 
-        public AuthService(HttpClient httpClient, IOptions<AppSettings> settings)
+        public AccountService(HttpClient httpClient, IOptions<AppSettings> settings)
         {
             _httpClient = httpClient;
             _settings = settings.Value;
