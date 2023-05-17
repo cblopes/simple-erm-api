@@ -74,9 +74,17 @@ namespace SimpleERP.MVC.Models
     public class DeleteProductModel
     {
         public Guid Id { get; set; }
+
+        [Display(Name = "Código")]
         public string Code { get; set; }
+
+        [Display(Name = "Descrição")]
         public string Description { get; set; }
+
+        [Display(Name = "Quantidade em Estoque")]
         public int QuantityInStock { get; set; }
+
+        [Display(Name = "Preço")]
         public double Price { get; set; }
         public ResponseResult ResponseResult { get; set; }
     }
