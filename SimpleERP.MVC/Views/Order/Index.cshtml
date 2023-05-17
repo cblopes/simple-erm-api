@@ -40,24 +40,24 @@
                         <!-- Model para criação de novo pedido -->
                         <div class="modal fade" id="createOrderModal" tabindex="-1" role="dialog" aria-labelledby="createOrderModal-label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
+                                <div class="modal-content rounded-3 shadow">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="createOrderModal-label">Cadastrar Nova Venda</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        <h1 class="modal-title fs-5" id="createOrderModal-label">Cadastrar Nova Venda</h1>
+                                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body py-0">
                                     <form id="createOrderForm" class="needs-validation was-validated">
                                         <div class="mb-3">
-                                            <label for="createOrderClientId" class="form-label">CPF/CNPJ do Cliente:</label>
+                                            <label for="createOrderClientId" class="form-label fs-6">CPF/CNPJ do Cliente:</label>
                                             <input type="text" class="form-control" id="createOrderClientId"
                                                    pattern="^\d{11,14}$" placeholder="58267272259" required>
-                                            <div class="invalid-feedback">Você deve informar um CPF/CNPJ válido.</div>
+                                            <div class="invalid-feedback form-text fs-6">Você deve informar um CPF/CNPJ válido.</div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
+                                    <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                    <button type="submit" class="btn btn-success" onclick="createOrder()">Confirmar</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary" onclick="createOrder()">Confirmar</button>
                                 </div>
                                 </div>
                             </div>
@@ -138,36 +138,37 @@
                                 <!-- Model para finalização de pedido -->
                                 <div class="modal fade" id="finishOrderModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="finishOrderModal-@item.Id-label" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="finishOrderModal-@item.Id-label">Finalizar Pedido</h5>
+                                        <div class="modal-content rounded-3 shadow">
+                                            <div class="modal-header border-bottom-0">
+                                                <h1 class="modal-title fs-5" id="finishOrderModal-@item.Id-label">Finalizar Pedido</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body text-start">
                                                 <p>O pedido será finalizado. Deseja continuar?</p>
                                             </div>
-                                            <div class="modal-footer">
+                                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                                <button type="button" class="btn btn-success" onclick="finishOrder('@item.Id')">Confirmar</button>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <button type="button" class="btn btn-primary" onclick="finishOrder('@item.Id')">Confirmar</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
+
                                 <!-- Model para cancelamento de pedido -->
                                 <div class="modal fade" id="cancelOrderModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModal-@item.Id-label" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="cancelOrderModal-@item.Id-label">Cancelar Pedido</h5>
+                                        <div class="modal-content rounded-3 shadow">
+                                            <div class="modal-header border-bottom-0">
+                                                <h1 class="modal-title fs-5" id="cancelOrderModal-@item.Id-label">Cancelar Pedido</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body text-start">
                                                 <p>O pedido será cancelado. Deseja continuar?</p>
                                             </div>
-                                            <div class="modal-footer">
+                                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                                <button type="button" class="btn btn-success" onclick="cancelOrder('@item.Id')">Confirmar</button>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <button type="button" class="btn btn-primary" onclick="cancelOrder('@item.Id')">Confirmar</button>
                                             </div>
                                         </div>
                                     </div>

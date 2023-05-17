@@ -101,27 +101,27 @@
                         <!-- Model para adiconar um novo item ao pedido -->
                         <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="createItemModal.Id-label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="createItemModal-label">Adicionar Item ao Pedido</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                <div class="modal-content rounded-3 shadow">
+                                    <div class="modal-header border-bottom-0">
+                                        <h1 class="modal-title fs-5" id="createItemModal-label">Adicionar Item ao Pedido</h1>
+                                        <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body py-0">
                                         <form id="createItemForm" class="needs-validation was-validated">
                                             <div class="mb-3">
-                                                <label for="createItemProductCode" class="form-label">Código do Produto:</label>
+                                                <label for="createItemProductCode" class="form-label fs-6">Código do Produto:</label>
                                                 <input type="text" class="form-control" id="createItemProductCode" name="productCode" placeholder="PROD-00001"
                                                        maxlength="10" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="createItemQuantity" class="form-label">Quantidade:</label>
+                                                <label for="createItemQuantity" class="form-label fs-6">Quantidade:</label>
                                                 <input type="number" class="form-control" min="0" pattern="\d+" id="createItemQuantity" name="quantity" required>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                        <button type="submit" class="btn btn-success" onclick="createItem('@Model.Id')" for="#createItemForm">Confirmar</button>
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button for="#createItemForm" type="submit" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
                                     </div>
                                 </div>
                             </div>
@@ -171,42 +171,44 @@
                                 </ul>
                             </div>
 
+                            <!-- Model para alterar de item do pedido -->
                             <div class="modal fade" id="alterItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="alterItemModal-@item.Id-label" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="alterItemModal-@item.Id-label">Alterar Item do Pedido</h5>
+                                    <div class="modal-content rounded-3 shadow">
+                                        <div class="modal-header border-bottom-0">
+                                            <h1 class="modal-title fs-5" id="alterItemModal-@item.Id-label">Alterar Item do Pedido</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body py-0">
                                             <form id="alterItemForm-@item.Id" class="needs-validation was-validated">
-                                                <div class="mb-3">
+                                                <div class="text-start mb-3">
                                                     <label for="quantity-@item.Id" class="form-label">Quantidade:</label>
                                                     <input type="number" class="form-control" min="0" pattern="\d+" id="quantity-@item.Id" value="@item.Quantity" required>
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="modal-footer">
+                                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                            <button type="submit" class="btn btn-success" onclick="alterItem('@item.OrderId','@item.Id')" for="#alterItemForm-@item.Id">Confirmar</button>
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <button for="#alterItemForm-@item.Id" type="submit" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Model para remover de item do pedido -->
                             <div class="modal fade" id="removeItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="removeItemModal-@item.Id-label" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteItemModal-@item.Id-label">Remover Item do Pedido</h5>
+                                    <div class="modal-content rounded-3 shadow">
+                                        <div class="modal-header border-bottom-0">
+                                            <h1 class="modal-title fs-5" id="deleteItemModal-@item.Id-label">Deseja remover este item?</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                         </div>
-                                        <div class="modal-body">
-                                            <p>Tem certeza que deseja remover este item?</p>
+                                        <div class="modal-body text-start">
+                                            <p>Essa ação não poderá ser desfeita.</p>
                                         </div>
-                                        <div class="modal-footer">
+                                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                            <button type="submit" class="btn btn-success" onclick="removeItem('@item.OrderId','@item.Id')">Confirmar</button>
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="button" class="btn btn-primary" onclick="removeItem('@item.OrderId','@item.Id')">Confirmar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -242,7 +244,7 @@
                 }),
                 success: function () {
                     alert("Item alterado com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function(xhr, textStatus, errorThrown) {
                   console.error(xhr.status + " " + xhr.statusText);
@@ -268,11 +270,11 @@
                 }),
                 success: function () {
                     alert("Item criado com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.error(xhr.status + " " + xhr.statusText);
-                    alert("Ocorreu um erro ao tentar alterar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                    alert("Ocorreu um erro ao tentar adicionar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
                 }
             });
         }
@@ -288,11 +290,11 @@
                 data: JSON.stringify(),
                 success: function () {
                     alert("Item removido com sucesso!");
-                    location.reload(); // recarrega a página para atualizar a tabela
+                    location.reload();
                 },
                 error: function(xhr, textStatus, errorThrown) {
                   console.error(xhr.status + " " + xhr.statusText);
-                  alert("Ocorreu um erro ao tentar alterar o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
+                  alert("Ocorreu um erro ao tentar remover o item. Mensagem: " + xhr.responseJSON.errors.Messages[0]);
                 }
             });
         }
