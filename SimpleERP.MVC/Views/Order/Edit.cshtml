@@ -8,180 +8,216 @@
     ViewData["Title"] = "Detalhar/Alterar Pedido";
 }
 
-<br />
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Order" asp-action="Index">Pedidos</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Ver/Alterar Pedido</li>
-    </ol>
-</nav>
+<!-- Início Breadcrumbs -->
+<div class="container-flex">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb border shadow-sm p-3 bg-body-tertiary rounded-3">
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Order">Pedidos</a>
+            </li>
+            <li class="breadcrumb-item active">Detalhar/Alterar Pedido</li>
+        </ol>
+    </nav>
+</div>
 
-<h1>Detalhar/Alterar Pedido</h1>
-<hr />
+<!-- Início Card Pedido -->
+<div class="card shadow-sm mb-3">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClientId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedIn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedIn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Value)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @Html.DisplayFor(model => model.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.ClientId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.CreatedIn)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.OrderStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.UpdatedIn)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.Value)
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Início Card Header -->
+    <div class="card-header">
+        <h4 class="mb-0 mt-1 col">Pedido</h4>
+    </div>
 
-<hr />
-
-<div class="row">
-    <div class="col">
-        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createItemModal">
-            Novo Item
-        </button>
-
-        <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="createItemModal.Id-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createItemModal-label">Adicionar Item ao Pedido</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="createItemForm" class="needs-validation was-validated">
-                            <div class="mb-3">
-                                <label for="createItemProductCode" class="form-label">Código do Produto:</label>
-                                <input type="text" class="form-control" id="createItemProductCode" name="productCode" placeholder="PROD-00001"
-                                       maxlength="10" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="createItemQuantity" class="form-label">Quantidade:</label>
-                                <input type="number" class="form-control" min="0" pattern="\d+" id="createItemQuantity" name="quantity" required>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button for="#createItemForm" type="submit" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Início Card Body -->
+    <div class="card-body">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.ClientId)
+                    </th>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.CreatedIn)
+                    </th>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.OrderStatus)
+                    </th>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.UpdatedIn)
+                    </th>
+                    <th class="col">
+                        @Html.DisplayNameFor(model => model.Value)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => model.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.ClientId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.CreatedIn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.OrderStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.UpdatedIn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Value)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<br />
+<!-- Início Card Item do Pedido -->
+<div class="card shadow-sm">
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Id do produto</th>
-            <th>Quantidade</th>
-            <th>Valor Unitário</th>
-            <th>Total</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.ProductId)</td>
-                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                <td>@Html.DisplayFor(modelItem => item.UnitaryValue)</td>
-                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#alterItemModal-@item.Id">
-                            Alterar
+    <!-- Início Card Header -->
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <h4 class="mb-0 mt-1 col">
+                    Itens do Pedido
+                    <span>
+                        <button type="button" class="btn btn-success btn-sm lh-1 mb-1"" data-bs-toggle="modal" data-bs-target="#createItemModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
+                                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z" />
+                            </svg>
                         </button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeItemModal-@item.Id">
-                            Excluir
-                        </button>
-                    </div> 
-                </td>
-            </tr>
 
-            <div class="modal fade" id="alterItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="alterItemModal-@item.Id-label" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="alterItemModal-@item.Id-label">Alterar Item do Pedido</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="alterItemForm-@item.Id" class="needs-validation was-validated">
-                                <div class="mb-3">
-                                    <label for="quantity-@item.Id" class="form-label">Quantidade:</label>
-                                    <input type="number" class="form-control" min="0" pattern="\d+" id="quantity-@item.Id" value="@item.Quantity" required>
+                        <!-- Model para adiconar um novo item ao pedido -->
+                        <div class="modal fade" id="createItemModal" tabindex="-1" role="dialog" aria-labelledby="createItemModal.Id-label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createItemModal-label">Adicionar Item ao Pedido</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="createItemForm" class="needs-validation was-validated">
+                                            <div class="mb-3">
+                                                <label for="createItemProductCode" class="form-label">Código do Produto:</label>
+                                                <input type="text" class="form-control" id="createItemProductCode" name="productCode" placeholder="PROD-00001"
+                                                       maxlength="10" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="createItemQuantity" class="form-label">Quantidade:</label>
+                                                <input type="number" class="form-control" min="0" pattern="\d+" id="createItemQuantity" name="quantity" required>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button for="#createItemForm" type="submit" class="btn btn-primary" onclick="createItem('@Model.Id')">Confirmar</button>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button for="#alterItemForm-@item.Id" type="submit" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
-                        </div>
-                    </div>
-                </div>
+                    </span>
+                </h4>
             </div>
+        </div>
+    </div>
 
-            <div class="modal fade" id="removeItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="removeItemModal-@item.Id-label" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteItemModal-@item.Id-label">Remover Item do Pedido</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Tem certeza que deseja remover este item?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-primary" onclick="removeItem('@item.OrderId','@item.Id')">Confirmar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </tbody>
-</table>
+    <!-- Início Card Body -->
+    <div class="card-body">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th class="col">Id</th>
+                    <th class="col">Id do produto</th>
+                    <th class="col">Quantidade</th>
+                    <th class="col">Valor Unitário</th>
+                    <th class="col">Total</th>
+                    <th class="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ProductId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UnitaryValue)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                        <td class="text-end">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu align-items-center shadow">
+                                    <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#alterItemModal-@item.Id">Alterar</a></li>
+                                    <li><a href="#" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#removeItemModal-@item.Id">Excluir</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="modal fade" id="alterItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="alterItemModal-@item.Id-label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="alterItemModal-@item.Id-label">Alterar Item do Pedido</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="alterItemForm-@item.Id" class="needs-validation was-validated">
+                                                <div class="mb-3">
+                                                    <label for="quantity-@item.Id" class="form-label">Quantidade:</label>
+                                                    <input type="number" class="form-control" min="0" pattern="\d+" id="quantity-@item.Id" value="@item.Quantity" required>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button for="#alterItemForm-@item.Id" type="submit" class="btn btn-primary" onclick="alterItem('@item.OrderId','@item.Id')">Confirmar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="removeItemModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="removeItemModal-@item.Id-label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteItemModal-@item.Id-label">Remover Item do Pedido</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja remover este item?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-primary" onclick="removeItem('@item.OrderId','@item.Id')">Confirmar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
