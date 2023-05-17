@@ -4,43 +4,56 @@
     ViewData["Title"] = "Remover Cliente";
 }
 
-<br />
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Index">Clientes</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Remover Cliente</li>
-    </ol>
-</nav>
+<!-- Início Breadcrumbs -->
+<div class="container-flex">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb border shadow-sm p-3 bg-body-tertiary rounded-3">
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Client">Clientes</a>
+            </li>
+            <li class="breadcrumb-item active">Remover Cliente</li>
+        </ol>
+    </nav>
+</div>
 
-<h1>Remover Cliente</h1>
-<h3>Tem certeza que deseja remover este cliente?</h3>
-<hr />
+<vc:summary></vc:summary> <!-- ViewComponent de erros -->
 
+<!-- Início Card -->
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <form asp-action="Delete">
-            <vc:summary></vc:summary>
+    <div class="card shadow-sm col-md-6 p-0">
 
-            <br />
+        <!-- Início Card Header -->
+        <div class="card-header">
+            <h4 class="card-title m-0">Remover Cliente</h4>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Id" class="form-label"></label>
-                <input asp-for="Id" type="text" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label asp-for="CpfCnpj" class="form-label">CPF/CNPJ</label>
-                <input asp-for="CpfCnpj" type="text" class="form-control" readonly>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label">Nome do cliente</label>
-                <input asp-for="Name" class="form-control" readonly>
-            </div>
+        <!-- Início Card Body -->
+        <div class="card-body mb-3">
+            <h5 class="card-subtitle mb-3">Tem certeza que deseja remover este cliente?</h5>
 
-            <div class="d-grid gap-2">
-                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
-                <a asp-action="Index" class="btn btn-danger">Voltar</a>
-            </div>
-        </form>
+            <form asp-action="Delete">
+
+                <div class="mb-3">
+                    <label asp-for="Id" class="form-label"></label>
+                    <input asp-for="Id" type="text" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CpfCnpj" class="form-label">CPF/CNPJ</label>
+                    <input asp-for="CpfCnpj" type="text" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Nome do cliente</label>
+                    <input asp-for="Name" class="form-control" readonly>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <input type="submit" value="Confirmar" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-outline-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

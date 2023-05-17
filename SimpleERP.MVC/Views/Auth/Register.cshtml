@@ -1,48 +1,60 @@
 ﻿@model SimpleERP.MVC.Models.RegisterUser
 
 @{
-    ViewData["Title"] = "Cadastrar Usuário";
+    ViewData["Title"] = "Criar Conta";
 }
 
-<br />
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Crie sua conta</li>
-    </ol>
-</nav>
+<!-- Início Breadcrumbs -->
+<div class="container-flex">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb border shadow-sm p-3 bg-body-tertiary rounded-3">
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Criar Conta</li>
+        </ol>
+    </nav>
+</div>
 
-<h1>Registre-se</h1>
-<hr />
+<vc:summary></vc:summary> <!-- ViewComponent de erros -->
 
+<!-- Início Card -->
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <vc:summary></vc:summary>
+    <div class="card shadow-sm col-md-6 p-0">
 
-        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-            <br />
+        <!-- Início Card Header -->
+        <div class="card-header">
+            <h4 class="card-title m-0">Criar Conta</h4>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
-                <span asp-validation-for="Email" class="form-text text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control">
-                <span asp-validation-for="Password" class="form-text text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="ConfirmPassword" class="form-label">Confirme sua senha</label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control">
-                <span asp-validation-for="ConfirmPassword" class="form-text text-danger"></span>
-            </div>
+        <!-- Início Card Body -->
+        <div class="card-body mb-3">
+            <h5 class="card-subtitle mb-3">Crie uma nova conta</h5>
 
-            <div class="d-grid gap-2">
-                <input type="submit" value="Confirmar" class="btn btn-outline-primary" />
-                <a asp-action="Index" asp-controller="Home" class="btn btn-danger">Voltar</a>
-            </div>
-        </form>
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
+                    <span asp-validation-for="Email" class="form-text text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control">
+                    <span asp-validation-for="Password" class="form-text text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirme sua senha</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control">
+                    <span asp-validation-for="ConfirmPassword" class="form-text text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <input type="submit" value="Confirmar" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-outline-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

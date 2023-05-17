@@ -6,77 +6,105 @@
     ViewData["Title"] = "Clientes";
 }
 
-<br />
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Clientes</li>
-    </ol>
-</nav>
-
-<h1>Clientes</h1>
-<hr />
-
-<div class="row">
-    <div class="col">
-        <a asp-action="Create" class="btn btn-outline-primary">Novo Cliente</a>
-    </div>    
-        
-    @using (Html.BeginForm("Index", "Client", FormMethod.Get, new { @class = "col-4 text-end" }))
-    {
-        <div class="input-group">
-            @Html.TextBox("document", null, new { @class = "form-control", @placeholder="CPF/CNPJ do cliente", @for="clientId"})
-            <button class="btn btn-outline-primary" type="submit" id="clientId">Pesquisar</button>
-        </div>
-    }
+<!-- Início Breadcrumbs -->
+<div class="container-flex">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb border shadow-sm p-3 bg-body-tertiary rounded-3">
+            <li class="breadcrumb-item">
+                <a class="text-dark fw-bold text-decoration-underline text-decoration-none" asp-action="Index" asp-controller="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Clientes</li>
+        </ol>
+    </nav>
 </div>
 
-<br />
+<!-- Início Card -->
+<div class="card shadow-sm">
+    <!-- Início Card Header -->
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <h4 class="mb-0 mt-1 col">
+                    Clientes
+                    <span>
+                        <a asp-action="Create" class="btn btn-success btn-sm lh-1 mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </a>
+                    </span>
+                </h4>
+            </div>
 
-@if (Model != null)
-{
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CpfCnpj)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+            <div class="col">
+                <div class="input-group input-group-sm mb-0 justify-content-end">
+                    @using (Html.BeginForm("Index", "Client", FormMethod.Get, new { @class = "col-6" }))
+                    {
+                        <div class="input-group">
+                            @Html.TextBox("document", null, new { @class = "form-control", @placeholder="CPF/CNPJ do cliente", @for="clientId"})
+                            <button class="btn btn-success" type="submit" id="clientId">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+     </div>
+
+    <!-- Início Card Body -->
+    <div class="card-body">
+        <table class="table table-sm table-hover">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CpfCnpj)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        <div class="btn-group">
-                            @Html.ActionLink("Alterar", "Edit", "Client", new { document = item.CpfCnpj }, new { @class="btn btn-outline-secondary" })
-                            @Html.ActionLink("Excluir", "Delete", "Client", new { document = item.CpfCnpj } , new { @class="btn btn-danger" })
-                        </div>                
-                    </td>
+                    <th class="col-4">
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th class="col-2">
+                        @Html.DisplayNameFor(model => model.CpfCnpj)
+                    </th>
+                    <th class="col-5">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th class="col-1"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="container justify-content-center">
-        <h3>Nenhum cliente cadastrado.</h3>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CpfCnpj)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="text-end">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu align-items-center shadow">
+                                    <li>@Html.ActionLink("Alterar", "Edit", "Client", new { document = item.CpfCnpj }, new { @class="dropdown-item" })</li>
+                                    <li>@Html.ActionLink("Excluir", "Delete", "Client", new { document = item.CpfCnpj } , new { @class="dropdown-item text-danger" })</li>
+                                </ul>
+                            </div>              
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-}
+</div>

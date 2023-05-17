@@ -1,23 +1,13 @@
 ﻿@using SimpleERP.MVC.Extensions;
 @inject IUser AppUser
 
-<ul class="navbar-nav">
-    @if (AppUser.IsAuthenticated())
-    {
-        <li class="nav-item">
-            <a class="nav-link text-white me-2" title="Manage">Olá, @AppUser.GetUserEmail()!</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-outline-light" asp-controller="Auth" asp-action="Logout">Sair</a>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="btn btn-outline-light me-2" asp-controller="Auth" asp-action="Register">Crie sua conta</a>
-        </li>
-        <li class="nav-item">
-            <a class="btn btn-light" asp-controller="Auth" asp-action="Login">Login</a>
-        </li>
-    }
-</ul>
+@if (AppUser.IsAuthenticated())
+{
+    <span class="me-2" title="Manage">Olá, @AppUser.GetUserEmail()!</span>
+    <a class="btn btn-secondary" asp-controller="Auth" asp-action="Logout">Sair</a>
+}
+else
+{
+    <a class="btn btn-outline-secondary me-2" asp-controller="Auth" asp-action="Login">Login</a>    
+    <a class="btn btn-success" asp-controller="Auth" asp-action="Register">Criar Conta</a>
+}
